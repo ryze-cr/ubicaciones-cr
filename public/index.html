@@ -6,6 +6,9 @@
 <title>API de provincias, cantones, distritos y códigos postales de Costa Rica</title>
 <meta name="description" content="API JSON gratuita con las 7 provincias, 84 cantones, 494 distritos y códigos postales de Costa Rica, según la División Territorial Administrativa 2026 del IGN. Sin API key y con CORS abierto.">
 <link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
+<link rel="alternate" hreflang="es" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
+<link rel="alternate" hreflang="en" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
+<link rel="alternate" hreflang="x-default" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="service-desc" href="/openapi.json" type="application/json">
 <link rel="alternate" href="/llms.txt" type="text/markdown" title="Guía para agentes de IA">
 <meta name="google-site-verification" content="XhBu1bwk5qUe1HFzy9coYEauCOHjY45j9XMJo6KSWUI">
@@ -14,6 +17,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CR">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:site_name" content="Ubicaciones de Costa Rica">
 <meta property="og:title" content="API de provincias, cantones, distritos y códigos postales de Costa Rica">
 <meta property="og:description" content="JSON gratuito con la División Territorial Administrativa 2026 del IGN: 7 provincias, 84 cantones y 494 distritos. Sin API key.">
@@ -59,117 +63,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  /* Identidad visual: colores y tipografía */
-  :root {
-    color-scheme: dark;
-    /* Fondo, superficies, bordes, texto y acento */
-    --bg: #0B0B0D; --surface: #151519; --line: #26262E; --code-bg: #151519;
-    --heading: #FAFAFA; --fg: #C9C9D1; --muted: #8A8A96;
-    --accent: #FFD231; --accent-soft: rgba(255, 210, 49, .12);
-    --radius: 12px;
-    --serif: "Fraunces", Georgia, serif;
-    --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.65 var(--sans); }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
-  header { padding: 64px 0 32px; }
-  h1, h2 { font-family: var(--serif); font-weight: 500; color: var(--heading); }
-  h1 { font-size: clamp(2rem, 5.5vw, 2.9rem); line-height: 1.12; margin: 0 0 14px; letter-spacing: -0.015em; }
-  h2 { font-size: 1.5rem; line-height: 1.25; margin: 56px 0 14px; }
-  p { margin: 0 0 12px; }
-  b, strong { color: var(--heading); font-weight: 500; }
-  .lede { color: var(--muted); font-size: 1.1rem; max-width: 40rem; }
-  a { color: var(--accent); text-underline-offset: 3px; }
-  code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); color: var(--heading); padding: 1px 5px; border-radius: 4px; }
-  pre { font-family: var(--mono); font-size: .85rem; background: var(--code-bg); border: 1px solid var(--line);
-        border-radius: var(--radius); padding: 14px 16px; overflow-x: auto; margin: 0 0 12px; line-height: 1.55; color: var(--fg); }
-  pre code { background: none; padding: 0; color: inherit; }
-
-  .acciones { margin-top: 22px; }
-  .boton { display: inline-flex; align-items: center; gap: 9px; font-weight: 500; color: var(--heading); text-decoration: none;
-           background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 9px 15px; }
-  .boton:hover { border-color: var(--accent); }
-  .boton:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .boton svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 32px 0 10px; }
-  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
-  .stat b { display: block; font-family: var(--mono); font-size: 1.9rem; line-height: 1.1; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
-  .stat span { color: var(--muted); font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
-  .source { color: var(--muted); font-size: .9rem; }
-
-  .demo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
-  .selects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  label { display: block; font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
-  select, input { width: 100%; font: inherit; color: var(--heading); background: var(--bg); border: 1px solid var(--line);
-                  border-radius: 8px; padding: 9px 10px; }
-  select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-  select:disabled { opacity: .5; }
-  .result { margin-top: 16px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; min-height: 2.6rem; }
-  .cp { font-family: var(--mono); font-size: 2rem; font-weight: 500; color: var(--accent); letter-spacing: .04em; }
-  .result small { color: var(--muted); font-family: var(--mono); }
-  .lookup { display: flex; gap: 8px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
-  .lookup input { flex: 1 1 180px; width: auto; font-family: var(--mono); }
-  .lookup output { flex-basis: 100%; color: var(--muted); }
-
-  table { width: 100%; border-collapse: collapse; font-size: .95rem; }
-  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-family: var(--mono); font-weight: 400; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
-  td code { white-space: nowrap; }
-  .table-scroll { overflow-x: auto; }
-  .tag { display: inline-block; font-family: var(--mono); font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .08em;
-         background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px; }
-  .faq details { border-bottom: 1px solid var(--line); }
-  .faq summary { cursor: pointer; padding: 14px 0; font-weight: 500; color: var(--heading); }
-  .faq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-  .faq details p { color: var(--muted); }
-  footer { margin: 72px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
-
-  .explorar-lede { color: var(--muted); max-width: 40rem; }
-  .explorador { display: grid; grid-template-columns: 220px 1fr; margin-top: 18px; background: var(--surface);
-                border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-  .explorador > * { min-width: 0; }
-  .ex-provincias { border-right: 1px solid var(--line); padding: 16px 12px; }
-  .ex-titulo { display: block; font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em;
-               color: var(--muted); margin: 0 10px 10px; }
-  .ex-provincias ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-  .ex-provincias button { width: 100%; text-align: left; font: inherit; color: var(--fg); background: none;
-                          border: 1px solid transparent; border-radius: 8px; padding: 9px 12px; cursor: pointer; }
-  .ex-provincias button:hover { background: var(--bg); color: var(--heading); }
-  .ex-provincias button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-  .ex-panel { padding: 16px 20px 20px; }
-  .ex-ruta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .9rem; color: var(--muted); margin-bottom: 12px; }
-  .ex-ruta button { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer;
-                    text-decoration: underline; text-underline-offset: 3px; }
-  .ex-ruta .actual { color: var(--heading); }
-  #ex-filtro { margin-bottom: 14px; }
-  .ex-items { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { display: inline-flex; align-items: baseline; gap: 8px; font: inherit; font-size: .9rem; color: var(--heading);
-          background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 11px; cursor: pointer; }
-  .chip:hover { border-color: var(--accent); }
-  .chip .num { font-family: var(--mono); font-size: .85em; color: var(--muted); }
-  .chip.distrito .num { color: var(--accent); }
-  .ex-provincias button:focus-visible, .chip:focus-visible, .ex-ruta button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .ex-estado { min-height: 1.4em; margin: 14px 0 0; font-size: .85rem; color: var(--muted); }
-  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-
-  @media (max-width: 640px) {
-    header { padding-top: 40px; }
-    .selects { grid-template-columns: 1fr; }
-    .stat b { font-size: 1.45rem; }
-    .explorador { grid-template-columns: 1fr; }
-    .ex-provincias { border-right: 0; border-bottom: 1px solid var(--line); padding: 12px; }
-    .ex-provincias ul { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
-    .ex-provincias button { width: auto; white-space: nowrap; }
-    .ex-panel { padding: 14px 12px 16px; }
-  }
-</style>
+<link rel="stylesheet" href="/estilos.css">
 </head>
 <body>
 <div class="wrap">
   <header>
+    <nav class="idiomas" aria-label="Idioma / Language">
+      <a href="/" lang="es" hreflang="es" aria-current="page">Español</a>
+      <a href="/en/" lang="en" hreflang="en">English</a>
+    </nav>
     <h1>API de ubicaciones de Costa Rica</h1>
     <p class="lede">API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica. Archivos estáticos, CORS abierto y sin API key.</p>
     <div class="acciones">
@@ -283,105 +185,6 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
   </footer>
 </div>
 
-<script>
-  const $ = (id) => document.getElementById(id);
-  const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
-  const pad = (n) => String(n).padStart(2, '0');
-
-  function fill(select, data, placeholder) {
-    select.innerHTML = `<option value="">${placeholder}</option>` +
-      Object.entries(data).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
-    select.disabled = false;
-  }
-  function reset(select) { select.innerHTML = '<option value="">—</option>'; select.disabled = true; }
-  function showCP(text = '', route = '') { $('cp').textContent = text; $('cp-ruta').textContent = route; }
-
-  getJSON('/meta.json').then((m) => {
-    for (const k of ['provincias', 'cantones', 'distritos']) $('n-' + k).textContent = m.totales[k];
-    $('fuente').textContent = m.fuente.nombre;
-    $('fuente').href = m.fuente.url;
-  }).catch(() => {});
-
-  getJSON('/provincias.json').then((d) => fill($('sel-provincia'), d, 'Elegí una provincia'));
-
-  $('sel-provincia').addEventListener('change', async (e) => {
-    reset($('sel-canton')); reset($('sel-distrito')); showCP();
-    if (e.target.value) fill($('sel-canton'), await getJSON(`/provincia/${e.target.value}/cantones.json`), 'Elegí un cantón');
-  });
-  $('sel-canton').addEventListener('change', async (e) => {
-    reset($('sel-distrito')); showCP();
-    const p = $('sel-provincia').value;
-    if (e.target.value) fill($('sel-distrito'), await getJSON(`/provincia/${p}/canton/${e.target.value}/distritos.json`), 'Elegí un distrito');
-  });
-  $('sel-distrito').addEventListener('change', (e) => {
-    const p = $('sel-provincia').value, c = $('sel-canton').value, d = e.target.value;
-    if (!d) return showCP();
-    showCP(`${p}${pad(c)}${pad(d)}`, `/codigo-postal/${p}${pad(c)}${pad(d)}.json`);
-  });
-
-  $('in-cp').addEventListener('input', async (e) => {
-    const v = e.target.value.trim(), out = $('out-cp');
-    if (!/^[1-7]\d{4}$/.test(v)) { out.textContent = v ? 'Son 5 dígitos y el primero va de 1 a 7.' : ''; return; }
-    try {
-      const d = await getJSON(`/codigo-postal/${v}.json`);
-      out.textContent = `${d.distrito}, ${d.canton}, ${d.provincia}`;
-    } catch { out.textContent = 'Ese código postal no existe.'; }
-  });
-  $('form-cp').addEventListener('submit', (e) => e.preventDefault());
-
-  // Explorador: provincia → cantón → distritos con código postal, a partir de /todo.json
-  const ex = { provincias: [], prov: null, canton: null };
-  const sinTildes = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  function crear(tag, attrs = {}, ...hijos) {
-    const e = document.createElement(tag);
-    for (const [k, v] of Object.entries(attrs)) k.startsWith('on') ? e.addEventListener(k.slice(2), v) : e.setAttribute(k, v);
-    e.append(...hijos);
-    return e;
-  }
-
-  function elegirProvincia(p) { ex.prov = p; ex.canton = null; $('ex-filtro').value = ''; renderExplorador(); }
-  function elegirCanton(c) { ex.canton = c; $('ex-filtro').value = ''; renderExplorador(); $('ex-filtro').focus(); }
-
-  async function copiar(distrito) {
-    try {
-      await navigator.clipboard.writeText(distrito.codigo);
-      $('ex-estado').textContent = `Copiado: ${distrito.codigo} · ${distrito.nombre}`;
-    } catch {
-      $('ex-estado').textContent = `Código postal de ${distrito.nombre}: ${distrito.codigo}`;
-    }
-  }
-
-  function renderItems() {
-    const filtro = sinTildes($('ex-filtro').value.trim());
-    const enCanton = Boolean(ex.canton);
-    const lista = (enCanton ? ex.canton.distritos : ex.prov.cantones)
-      .filter((x) => !filtro || sinTildes(x.nombre).includes(filtro) || x.codigo.includes(filtro));
-    $('ex-items').replaceChildren(...lista.map((x) => enCanton
-      ? crear('button', { type: 'button', class: 'chip distrito', title: 'Copiar código postal', onclick: () => copiar(x) },
-          crear('span', { class: 'num' }, x.codigo), x.nombre)
-      : crear('button', { type: 'button', class: 'chip', onclick: () => elegirCanton(x) },
-          crear('span', { class: 'num' }, x.codigo.slice(1)), x.nombre)));
-    const tipo = enCanton ? 'distrito' : 'cantón';
-    $('ex-estado').textContent = lista.length
-      ? `${lista.length} ${lista.length === 1 ? tipo : (enCanton ? 'distritos' : 'cantones')}`
-      : 'Sin resultados';
-  }
-
-  function renderExplorador() {
-    $('ex-provincias').replaceChildren(...ex.provincias.map((p) => crear('li', {},
-      crear('button', { type: 'button', 'aria-pressed': String(p === ex.prov), onclick: () => elegirProvincia(p) }, p.nombre))));
-    const sep = () => crear('span', { 'aria-hidden': 'true' }, '›');
-    $('ex-ruta').replaceChildren(...(ex.canton
-      ? [crear('button', { type: 'button', onclick: () => elegirProvincia(ex.prov) }, ex.prov.nombre), sep(),
-         crear('span', { class: 'actual', 'aria-current': 'location' }, ex.canton.nombre)]
-      : [crear('span', { class: 'actual', 'aria-current': 'location' }, ex.prov.nombre), sep(), crear('span', {}, 'elegí un cantón')]));
-    $('ex-filtro').placeholder = ex.canton ? `Filtrar distritos de ${ex.canton.nombre}…` : `Filtrar cantones de ${ex.prov.nombre}…`;
-    renderItems();
-  }
-
-  $('ex-filtro').addEventListener('input', renderItems);
-  getJSON('/todo.json').then((t) => { ex.provincias = t.provincias; elegirProvincia(t.provincias[0]); })
-    .catch(() => { $('ex-provincias').replaceChildren(crear('li', { class: 'ex-estado' }, 'No se pudieron cargar los datos.')); });
-</script>
+<script src="/app.js" defer></script>
 </body>
 </html>

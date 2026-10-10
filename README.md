@@ -4,6 +4,8 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 
 **URL:** https://ubicaciones-cr.ryze-cr.workers.dev
 
+**English:** https://ubicaciones-cr.ryze-cr.workers.dev/en/
+
 - **7 provincias, 84 cantones y 494 distritos**
 - Sin API key, sin registro y con CORS abierto
 - El código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2) + distrito (2)

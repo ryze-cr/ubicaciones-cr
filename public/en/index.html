@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Costa Rica Provinces, Cantons, Districts and Postal Codes API</title>
+<meta name="description" content="Free JSON API with Costa Rica's 7 provinces, 84 cantons, 494 districts and postal codes, based on the official 2026 Administrative Territorial Division (DTA 2026) by the National Geographic Institute. No API key, open CORS.">
+<link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
+<link rel="alternate" hreflang="es" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
+<link rel="alternate" hreflang="en" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
+<link rel="alternate" hreflang="x-default" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
+<link rel="service-desc" href="/openapi.json" type="application/json">
+<link rel="alternate" href="/llms.txt" type="text/markdown" title="Guide for AI agents (Spanish)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0B0B0D">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_CR">
+<meta property="og:site_name" content="Costa Rica Locations API">
+<meta property="og:title" content="Costa Rica Provinces, Cantons, Districts and Postal Codes API">
+<meta property="og:description" content="Free JSON with the official 2026 Administrative Territorial Division: 7 provinces, 84 cantons and 494 districts. No API key.">
+<meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
+<meta property="og:image" content="https://ubicaciones-cr.ryze-cr.workers.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Costa Rica locations: 7 provinces, 84 cantons and 494 districts">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Costa Rica Provinces, Cantons, Districts and Postal Codes API",
+  "url": "https://ubicaciones-cr.ryze-cr.workers.dev/en/",
+  "inLanguage": "en",
+  "isPartOf": { "@type": "WebSite", "name": "Ubicaciones de Costa Rica", "url": "https://ubicaciones-cr.ryze-cr.workers.dev/" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <nav class="idiomas" aria-label="Idioma / Language">
+      <a href="/" lang="es" hreflang="es">Español</a>
+      <a href="/en/" lang="en" hreflang="en" aria-current="page">English</a>
+    </nav>
+    <h1>Costa Rica locations API</h1>
+    <p class="lede">Free JSON API with Costa Rica's provinces, cantons, districts and postal codes. Static files, open CORS and no API key.</p>
+    <div class="acciones">
+      <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="n-provincias">7</b><span>provinces</span></div>
+      <div class="stat"><b id="n-cantones">84</b><span>cantons</span></div>
+      <div class="stat"><b id="n-distritos">494</b><span>districts</span></div>
+    </div>
+    <p class="source">Source: <a id="fuente" href="https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf">Administrative Territorial Division (DTA 2026)</a>, National Geographic Institute of Costa Rica (IGN).</p>
+  </header>
+
+  <section class="demo" aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo" style="margin-top:0">Try it</h2>
+    <div class="selects">
+      <div><label for="sel-provincia">Province</label><select id="sel-provincia"><option value="">Loading…</option></select></div>
+      <div><label for="sel-canton">Canton</label><select id="sel-canton" disabled><option value="">—</option></select></div>
+      <div><label for="sel-distrito">District</label><select id="sel-distrito" disabled><option value="">—</option></select></div>
+    </div>
+    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><small id="cp-ruta"></small></div>
+    <form class="lookup" id="form-cp">
+      <label for="in-cp" style="flex-basis:100%;margin:0">Look up a postal code</label>
+      <input id="in-cp" inputmode="numeric" maxlength="5" pattern="[1-7][0-9]{4}" placeholder="10305" autocomplete="off">
+      <output id="out-cp" for="in-cp"></output>
+    </form>
+  </section>
+
+  <section aria-labelledby="explorar-titulo">
+    <h2 id="explorar-titulo">Browse locations</h2>
+    <p class="explorar-lede">Choose a province, then a canton, to see its districts with their postal codes. Tap a district to copy its code.</p>
+    <div class="explorador">
+      <nav class="ex-provincias" aria-labelledby="ex-titulo-provincias">
+        <span class="ex-titulo" id="ex-titulo-provincias">Provinces</span>
+        <ul id="ex-provincias"><li class="ex-estado">Loading…</li></ul>
+      </nav>
+      <div class="ex-panel">
+        <nav class="ex-ruta" id="ex-ruta" aria-label="Selected location"></nav>
+        <label class="sr-only" for="ex-filtro">Filter</label>
+        <input id="ex-filtro" type="search" autocomplete="off" placeholder="Filter…">
+        <div class="ex-items" id="ex-items"></div>
+        <p class="ex-estado" id="ex-estado" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <h2>Endpoints</h2>
+  <p>All endpoints answer <code>GET</code> with JSON. Canton and district numbers have no leading zeros. Names and field names are in Spanish, as published by the IGN.</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Path</th><th>Returns</th></tr></thead>
+    <tbody>
+      <tr><td><code>/provincias.json</code></td><td>The 7 provinces</td></tr>
+      <tr><td><code>/provincia/{p}/cantones.json</code></td><td>Cantons of a province</td></tr>
+      <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Districts of a canton</td></tr>
+      <tr><td><code>/codigo-postal/{PCCDD}.json</code><span class="tag">new</span></td><td>A district by postal code, with its canton and province</td></tr>
+      <tr><td><code>/distritos.json</code><span class="tag">new</span></td><td>Flat list of every district with its postal code</td></tr>
+      <tr><td><code>/todo.json</code><span class="tag">new</span></td><td>Full tree with official codes and areas in km²</td></tr>
+      <tr><td><code>/meta.json</code><span class="tag">new</span></td><td>Source, edition and totals</td></tr>
+      <tr><td><code>/openapi.json</code></td><td>OpenAPI 3.1 specification</td></tr>
+      <tr><td><code>/llms.txt</code></td><td>Usage guide for AI agents (in Spanish)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Examples</h2>
+  <pre><code>// Cantons of San José
+const cantons = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json());
+// { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
+
+// District from a postal code
+const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
+// { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
+//   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, ... }</code></pre>
+
+  <h2>Postal codes</h2>
+  <p>A Costa Rican postal code is the official district code: <b>P</b> (province, 1 digit) + <b>CC</b> (canton, 2 digits) + <b>DD</b> (district, 2 digits). For example, San Antonio in Desamparados is <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
+  <p>When a district moves to another canton, its old code is retired and never reused, so numbering can have gaps (for example, Grecia has no district 6).</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>How many provinces, cantons and districts does Costa Rica have?</summary>
+      <p>According to the IGN's 2026 Administrative Territorial Division, Costa Rica has <b>7 provinces, 84 cantons and 494 districts</b>. The newest cantons are Monteverde and Puerto Jiménez, in Puntarenas. The newest districts are Pijije (Bagaces) and Cabagra (Buenos Aires), created by law in May 2025.</p>
+    </details>
+    <details>
+      <summary>What is the postal code of a district?</summary>
+      <p>It is the district's official 5-digit code. You can look it up in the demo above, or request <code>/codigo-postal/{code}.json</code> to get the district, canton and province for a postal code.</p>
+    </details>
+    <details>
+      <summary>Is the API free? Do I need an API key?</summary>
+      <p>It is free and needs no API key or sign-up. CORS is open, so you can call it directly from a browser, a mobile app or a server.</p>
+    </details>
+    <details>
+      <summary>How often is the data updated?</summary>
+      <p>Whenever the National Geographic Institute publishes a new edition of the Administrative Territorial Division, every two years, or when a law creates a new canton or district. <code>/meta.json</code> shows the current edition.</p>
+    </details>
+    <details>
+      <summary>Why are the names in Spanish?</summary>
+      <p>Province, canton and district names are proper nouns and are kept exactly as the IGN publishes them. JSON field names are also in Spanish (<code>provincia</code>, <code>canton</code>, <code>distrito</code>, <code>codigo_postal</code>) so the API stays compatible with existing integrations.</p>
+    </details>
+  </div>
+
+  <footer>
+    <p>Made by <a href="https://github.com/ryze-cr">Carl De Pass</a>.</p>
+    <p>Data: National Geographic Institute (IGN), National Registry of Costa Rica. Inspired by <a href="https://github.com/lfbvyo/ubicaciones">lfbvyo/ubicaciones</a>.</p>
+    <p>Open source under the MIT license · <a href="https://github.com/ryze-cr/ubicaciones-cr">GitHub</a> · Found an error? <a href="https://github.com/ryze-cr/ubicaciones-cr/issues">Open an issue</a>.</p>
+  </footer>
+</div>
+
+<script src="/app.js" defer></script>
+</body>
+</html>
