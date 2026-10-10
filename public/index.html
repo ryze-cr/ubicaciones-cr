@@ -59,8 +59,8 @@
 <style>
   /* Sistema de color y tipografía de Flashout Studio (brand board v9.0) */
   :root {
-    color-scheme: dark light;
-    /* Oscuro (principal): Void, Carbon, Slate, Ash, Mist, Paper · acento Bolt */
+    color-scheme: dark;
+    /* Void, Carbon, Slate, Ash, Mist, Paper · acento Bolt */
     --bg: #0B0B0D; --surface: #151519; --line: #26262E; --code-bg: #151519;
     --heading: #FAFAFA; --fg: #C9C9D1; --muted: #8A8A96;
     --accent: #FFD231; --accent-soft: rgba(255, 210, 49, .12);
@@ -68,19 +68,6 @@
     --serif: "Fraunces", Georgia, serif;
     --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  /* Claro: Paper de fondo, acento Ember (nunca Bolt sobre blanco) */
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #FAFAFA; --surface: #FFFFFF; --line: #C9C9D1; --code-bg: #F2F2F4;
-      --heading: #0B0B0D; --fg: #26262E; --muted: #5A5A66;
-      --accent: #B45309; --accent-soft: rgba(180, 83, 9, .06);
-    }
-  }
-  :root[data-theme="light"] {
-    --bg: #FAFAFA; --surface: #FFFFFF; --line: #C9C9D1; --code-bg: #F2F2F4;
-    --heading: #0B0B0D; --fg: #26262E; --muted: #5A5A66;
-    --accent: #B45309; --accent-soft: rgba(180, 83, 9, .06);
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.65 var(--sans); }

@@ -10,7 +10,7 @@ La página de documentación busca cumplir las pautas [WCAG 2.2](https://www.w3.
 - Cada selector y campo tiene su etiqueta (`<label>`).
 - Todo se puede usar con teclado y el foco es visible.
 - Los resultados del demo se anuncian a lectores de pantalla (`aria-live`).
-- Modo claro y oscuro según la preferencia del sistema, con contraste de texto suficiente en ambos.
+- Tema oscuro con contraste de texto de al menos 4.5:1 (nivel AA).
 - Funciona en pantallas desde 320 px de ancho sin scroll horizontal, y con zoom del navegador.
 - No usa animaciones ni contenido que parpadee.
 
