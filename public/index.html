@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>API de provincias, cantones, distritos y códigos postales de Costa Rica</title>
-<meta name="description" content="API JSON gratuita con las 7 provincias, 84 cantones, 494 distritos y códigos postales de Costa Rica, según la División Territorial Administrativa 2026 del IGN. Sin API key y con CORS abierto.">
+<title>API de códigos postales y distritos de Costa Rica</title>
+<meta name="description" content="API JSON gratis con los códigos postales, 7 provincias, 84 cantones y 494 distritos de Costa Rica, según la DTA 2026 del IGN. Sin API key.">
 <link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="alternate" hreflang="es" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="alternate" hreflang="en" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
@@ -19,8 +19,8 @@
 <meta property="og:locale" content="es_CR">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:site_name" content="Ubicaciones de Costa Rica">
-<meta property="og:title" content="API de provincias, cantones, distritos y códigos postales de Costa Rica">
-<meta property="og:description" content="JSON gratuito con la División Territorial Administrativa 2026 del IGN: 7 provincias, 84 cantones y 494 distritos. Sin API key.">
+<meta property="og:title" content="API de códigos postales y distritos de Costa Rica">
+<meta property="og:description" content="Códigos postales, 7 provincias, 84 cantones y 494 distritos de Costa Rica en JSON. Datos oficiales del IGN (DTA 2026), gratis y sin API key.">
 <meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <meta property="og:image" content="https://ubicaciones-cr.ryze-cr.workers.dev/og.png">
 <meta property="og:image:width" content="1200">
@@ -40,7 +40,7 @@
     },
     {
       "@type": "Dataset",
-      "name": "Provincias, cantones, distritos y códigos postales de Costa Rica (DTA 2026)",
+      "name": "Códigos postales, provincias, cantones y distritos de Costa Rica (DTA 2026)",
       "description": "División territorial administrativa de Costa Rica en formato JSON: 7 provincias, 84 cantones y 494 distritos, con el código oficial de cada distrito, que es también su código postal, y el área en km². Basado en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN).",
       "url": "https://ubicaciones-cr.ryze-cr.workers.dev/",
       "sameAs": "https://github.com/ryze-cr/ubicaciones-cr",
@@ -72,7 +72,7 @@
       <a href="/" lang="es" hreflang="es" aria-current="page">Español</a>
       <a href="/en/" lang="en" hreflang="en">English</a>
     </nav>
-    <h1>API de ubicaciones de Costa Rica</h1>
+    <h1>API de códigos postales y distritos de Costa Rica</h1>
     <p class="lede">API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica. Archivos estáticos, CORS abierto y sin API key.</p>
     <div class="acciones">
       <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
@@ -108,7 +108,7 @@
     </form>
   </section>
 
-  <h2>Endpoints</h2>
+  <h2 id="endpoints">Endpoints de la API</h2>
   <p>Todos responden <code>GET</code> con JSON. Los números de cantón y distrito van sin ceros a la izquierda.</p>
   <div class="table-scroll">
   <table>
@@ -127,7 +127,7 @@
   </table>
   </div>
 
-  <h2>Ejemplos</h2>
+  <h2 id="ejemplos">Ejemplos de uso</h2>
   <pre><code>// Cantones de San José
 const cantones = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json());
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
@@ -137,11 +137,11 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
 //   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, ... }</code></pre>
 
-  <h2>Código postal</h2>
+  <h2 id="codigo-postal">Cómo funciona el código postal de Costa Rica</h2>
   <p>El código postal de Costa Rica es el código oficial del distrito: <b>P</b> (provincia, 1 dígito) + <b>CC</b> (cantón, 2 dígitos) + <b>DD</b> (distrito, 2 dígitos). Por ejemplo, San Antonio de Desamparados es <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
   <p>Cuando un distrito pasa a otro cantón, su código viejo se retira y no se reutiliza, así que puede haber saltos en la numeración (por ejemplo, Grecia no tiene distrito 6).</p>
 
-  <h2>Preguntas frecuentes</h2>
+  <h2 id="preguntas-frecuentes">Preguntas frecuentes</h2>
   <div class="faq">
     <details>
       <summary>¿Cuántas provincias, cantones y distritos tiene Costa Rica?</summary>
