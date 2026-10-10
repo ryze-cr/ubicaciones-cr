@@ -12,6 +12,9 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 PUBLIC = RAIZ / 'public'
+# Versión de la API (semver): mayor = cambios que rompen integraciones, menor = rutas o datos nuevos,
+# parche = correcciones. Se publica en /meta.json y en cada release de GitHub.
+VERSION = '1.0.0'
 GENERADOS = ['provincias.json', 'provincia', 'codigo-postal', 'todo.json', 'distritos.json', 'meta.json']
 
 
@@ -58,6 +61,7 @@ def main():
     escribir('distritos.json', planos)
     escribir('todo.json', dta)
     escribir('meta.json', {
+        'version': VERSION,
         'fuente': dta['fuente'],
         'totales': {
             'provincias': len(dta['provincias']),
