@@ -91,7 +91,8 @@ $('in-cp').addEventListener('input', async (e) => {
   if (!/^[1-7]\d{4}$/.test(v)) { out.textContent = v ? T.formatoCP : ''; return; }
   try {
     const d = await getJSON(`/codigo-postal/${v}.json`);
-    out.textContent = `${d.distrito}, ${d.canton}, ${d.provincia}`;
+    out.replaceChildren(crear('span', { class: 'lugar' }, d.distrito),
+      crear('span', { class: 'lugar-ruta' }, `${d.canton} · ${d.provincia}`));
   } catch { out.textContent = T.cpNoExiste; }
 });
 $('form-cp').addEventListener('submit', (e) => e.preventDefault());
