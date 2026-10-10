@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Costa Rica Provinces, Cantons, Districts and Postal Codes API</title>
-<meta name="description" content="Free JSON API with Costa Rica's 7 provinces, 84 cantons, 494 districts and postal codes, based on the official 2026 Administrative Territorial Division (DTA 2026) by the National Geographic Institute. No API key, open CORS.">
+<title>Costa Rica Postal Codes &amp; Districts API</title>
+<meta name="description" content="Free JSON API with Costa Rica postal codes, 7 provinces, 84 cantons and 494 districts, based on official IGN data (DTA 2026). No API key.">
 <link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
 <link rel="alternate" hreflang="es" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="alternate" hreflang="en" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
@@ -18,8 +18,8 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="es_CR">
 <meta property="og:site_name" content="Costa Rica Locations API">
-<meta property="og:title" content="Costa Rica Provinces, Cantons, Districts and Postal Codes API">
-<meta property="og:description" content="Free JSON with the official 2026 Administrative Territorial Division: 7 provinces, 84 cantons and 494 districts. No API key.">
+<meta property="og:title" content="Costa Rica Postal Codes &amp; Districts API">
+<meta property="og:description" content="Costa Rica postal codes, 7 provinces, 84 cantons and 494 districts as JSON. Official IGN data (DTA 2026), free and with no API key.">
 <meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
 <meta property="og:image" content="https://ubicaciones-cr.ryze-cr.workers.dev/og.png">
 <meta property="og:image:width" content="1200">
@@ -31,7 +31,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Costa Rica Provinces, Cantons, Districts and Postal Codes API",
+  "name": "Costa Rica Postal Codes & Districts API",
   "url": "https://ubicaciones-cr.ryze-cr.workers.dev/en/",
   "inLanguage": "en",
   "isPartOf": { "@type": "WebSite", "name": "Ubicaciones de Costa Rica", "url": "https://ubicaciones-cr.ryze-cr.workers.dev/" }
@@ -49,7 +49,7 @@
       <a href="/" lang="es" hreflang="es">Español</a>
       <a href="/en/" lang="en" hreflang="en" aria-current="page">English</a>
     </nav>
-    <h1>Costa Rica locations API</h1>
+    <h1>Costa Rica postal codes &amp; districts API</h1>
     <p class="lede">Free JSON API with Costa Rica's provinces, cantons, districts and postal codes. Static files, open CORS and no API key.</p>
     <div class="acciones">
       <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
@@ -85,7 +85,7 @@
     </form>
   </section>
 
-  <h2>Endpoints</h2>
+  <h2 id="endpoints">API endpoints</h2>
   <p>All endpoints answer <code>GET</code> with JSON. Canton and district numbers have no leading zeros. Names and field names are in Spanish, as published by the IGN.</p>
   <div class="table-scroll">
   <table>
@@ -104,7 +104,7 @@
   </table>
   </div>
 
-  <h2>Examples</h2>
+  <h2 id="examples">Usage examples</h2>
   <pre><code>// Cantons of San José
 const cantons = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json());
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
@@ -114,11 +114,11 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
 //   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, ... }</code></pre>
 
-  <h2>Postal codes</h2>
+  <h2 id="postal-codes">How Costa Rica postal codes work</h2>
   <p>A Costa Rican postal code is the official district code: <b>P</b> (province, 1 digit) + <b>CC</b> (canton, 2 digits) + <b>DD</b> (district, 2 digits). For example, San Antonio in Desamparados is <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
   <p>When a district moves to another canton, its old code is retired and never reused, so numbering can have gaps (for example, Grecia has no district 6).</p>
 
-  <h2>FAQ</h2>
+  <h2 id="faq">Frequently asked questions</h2>
   <div class="faq">
     <details>
       <summary>How many provinces, cantons and districts does Costa Rica have?</summary>
