@@ -7,6 +7,8 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 - El código postal es el código oficial del distrito (`PCCDD`)
 - Las rutas son compatibles con [ubicaciones.paginasweb.cr](https://ubicaciones.paginasweb.cr)
 
+**URL:** https://ubicaciones-cr.ryze-cr.workers.dev
+
 ## Endpoints
 
 | Ruta | Devuelve |
@@ -22,10 +24,10 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 Los números de cantón y distrito van sin ceros a la izquierda: `/provincia/1/canton/3/distritos.json`.
 
 ```js
-const cantones = await fetch('https://<dominio>/provincia/1/cantones.json').then(r => r.json());
+const cantones = await fetch('https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/cantones.json').then(r => r.json());
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
 
-const distrito = await fetch('https://<dominio>/codigo-postal/10305.json').then(r => r.json());
+const distrito = await fetch('https://ubicaciones-cr.ryze-cr.workers.dev/codigo-postal/10305.json').then(r => r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados", "provincia": "San José", ... }
 ```
 
