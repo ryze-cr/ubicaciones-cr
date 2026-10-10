@@ -58,6 +58,19 @@ edicion = dta['fuente']['edicion']
 indice = (PUBLIC / 'index.html').read_text(encoding='utf-8')
 revisar(f'DTA {edicion}' in indice and f'{len(distritos)} distritos' in indice,
         f'index.html no menciona la DTA {edicion} o los {len(distritos)} distritos (SEO desactualizado)')
+guia = (PUBLIC / 'llms.txt').read_text(encoding='utf-8')
+revisar(f'DTA {edicion}' in guia and f'{len(distritos)} distritos' in guia,
+        f'llms.txt no menciona la DTA {edicion} o los {len(distritos)} distritos')
+spec = json.loads((PUBLIC / 'openapi.json').read_text(encoding='utf-8'))
+revisar(spec['info']['version'] == f'DTA {edicion}', f'openapi.json no tiene la versión DTA {edicion}')
+for ruta, op in spec['paths'].items():
+    ejemplo = op['get']['responses']['200']['content']['application/json'].get('example')
+    if ejemplo is None:
+        continue
+    params = {'provincia': '1', 'canton': '3', 'codigoPostal': ejemplo.get('codigo_postal', '') if isinstance(ejemplo, dict) else ''}
+    real = leer(ruta.lstrip('/').format(**params))
+    esperado = real if isinstance(real, dict) and 'codigo_postal' in real else {k: real.get(k) for k in ejemplo}
+    revisar(ejemplo == esperado, f'el ejemplo de {ruta} en openapi.json no coincide con los datos')
 revisar((PUBLIC / 'og.png').exists(), 'falta public/og.png (correr scripts/generar_imagen_og.py)')
 revisar((PUBLIC / '404.html').exists(), 'falta public/404.html (sin él, Cloudflare Pages responde 200 a rutas inexistentes)')
 

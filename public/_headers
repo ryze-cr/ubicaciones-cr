@@ -6,3 +6,6 @@
 /*.json
   Cache-Control: public, max-age=3600, s-maxage=86400
   X-Robots-Tag: noindex
+
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8

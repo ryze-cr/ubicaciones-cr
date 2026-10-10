@@ -19,6 +19,8 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 | `/distritos.json` | Lista plana de todos los distritos con código postal |
 | `/todo.json` | Árbol completo con códigos oficiales y áreas en km² |
 | `/meta.json` | Fuente, edición y totales |
+| `/openapi.json` | Especificación OpenAPI 3.1 |
+| `/llms.txt` | Guía de uso para agentes de IA |
 
 Los números de cantón y distrito van sin ceros a la izquierda: `/provincia/1/canton/3/distritos.json`.
 
