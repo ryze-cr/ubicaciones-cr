@@ -1,0 +1,45 @@
+# Ubicaciones de Costa Rica
+
+> API JSON pública y gratuita con las 7 provincias, 84 cantones y 494 distritos de Costa Rica, y sus códigos postales, según la División Territorial Administrativa (DTA 2026) del Instituto Geográfico Nacional (IGN). Solo lectura, sin autenticación, con CORS abierto. Todas las rutas son `GET` a archivos estáticos.
+
+Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
+
+## Reglas importantes
+
+- **No hace falta API key, registro ni headers especiales.** Un `GET` simple funciona desde cualquier lugar.
+- **Código postal = código oficial del distrito**, 5 dígitos `PCCDD`: provincia (1 dígito, 1–7) + cantón (2 dígitos) + distrito (2 dígitos). Ejemplo: San Antonio de Desamparados = `1` `03` `05` = `10305`.
+- **En las rutas, cantón y distrito van sin ceros a la izquierda:** `/provincia/1/canton/3/distritos.json`, no `/provincia/1/canton/03/...`.
+- **La numeración puede tener saltos.** Cuando un distrito pasa a otro cantón, su código viejo se retira y no se reutiliza. Por ejemplo, Grecia (203) no tiene distrito 6, y `20306` no existe. No asumas que los números son consecutivos: leé las claves que devuelve la API.
+- **Un 404 significa que ese código no existe** en la división territorial vigente. La respuesta 404 es HTML, no JSON: revisá el estado HTTP antes de parsear.
+- **Los nombres son los oficiales del IGN**, con tildes. El cantón 1 de cada provincia se llama como la provincia (por ejemplo, "San José"), no "Central".
+- **Para muchas consultas, descargá `/distritos.json` o `/todo.json` una vez** y trabajá en memoria en lugar de hacer cientos de peticiones. Las respuestas se pueden cachear una hora.
+- **Para saber la edición vigente de los datos**, consultá `/meta.json`.
+
+## Endpoints
+
+- [/provincias.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincias.json): objeto `{ "número": "nombre" }` con las 7 provincias. Ejemplo: `{"1":"San José","2":"Alajuela",...,"7":"Limón"}`
+- [/provincia/{p}/cantones.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/cantones.json): cantones de la provincia `p` (1–7), como `{ "número": "nombre" }`. Ejemplo para `p=1`: `{"1":"San José","2":"Escazú","3":"Desamparados",...}`
+- [/provincia/{p}/canton/{c}/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/canton/3/distritos.json): distritos del cantón `c` de la provincia `p`, como `{ "número": "nombre" }`. Ejemplo para `p=1, c=3`: `{"1":"Desamparados","2":"San Miguel",...,"5":"San Antonio",...}`
+- [/codigo-postal/{PCCDD}.json](https://ubicaciones-cr.ryze-cr.workers.dev/codigo-postal/10305.json): un distrito a partir de su código postal. Respuesta:
+  `{"codigo_postal":"10305","distrito":"San Antonio","canton":"Desamparados","provincia":"San José","codigos":{"provincia":1,"canton":3,"distrito":5},"area_km2":2.1}`
+- [/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/distritos.json): arreglo con los 494 distritos, cada uno con la misma forma que `/codigo-postal/{PCCDD}.json`. Es la mejor opción para buscar por nombre.
+- [/todo.json](https://ubicaciones-cr.ryze-cr.workers.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`.
+- [/meta.json](https://ubicaciones-cr.ryze-cr.workers.dev/meta.json): fuente, edición y totales.
+- [/openapi.json](https://ubicaciones-cr.ryze-cr.workers.dev/openapi.json): especificación OpenAPI 3.1 de todas las rutas.
+
+## Tareas comunes
+
+- **Obtener provincia, cantón y distrito de un código postal:** `GET /codigo-postal/{código}.json`. Si responde 404, el código no existe.
+- **Validar un código postal:** igual que el anterior. 200 = válido, 404 = inválido.
+- **Armar selectores en cascada (provincia → cantón → distrito):** `/provincias.json`, después `/provincia/{p}/cantones.json`, después `/provincia/{p}/canton/{c}/distritos.json`. El código postal se arma como `p + pad2(c) + pad2(d)`.
+- **Buscar un distrito por nombre:** descargá `/distritos.json` y filtrá por `distrito`, ignorando tildes y mayúsculas. Hay nombres repetidos en distintos cantones (por ejemplo, varios "San Rafael"), así que mostrá también el cantón y la provincia.
+
+## Notas sobre los datos
+
+- `area_km2` puede ser `null`. Hoy solo pasa con Duacarí (70605, Guácimo): el IGN lo cuenta en el total oficial, pero no publica su área en la tabla de detalle.
+- Fuente: [División Territorial Administrativa 2026, IGN](https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf).
+
+## Opcional
+
+- [Repositorio en GitHub](https://github.com/ryze-cr/ubicaciones-cr): código fuente y reportes de errores en los datos.
+- [Documentación para personas](https://ubicaciones-cr.ryze-cr.workers.dev/)

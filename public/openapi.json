@@ -1,0 +1,230 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ubicaciones de Costa Rica",
+    "version": "DTA 2026",
+    "summary": "Provincias, cantones, distritos y códigos postales de Costa Rica.",
+    "description": "API JSON pública, gratuita y de solo lectura basada en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN): 7 provincias, 84 cantones y 494 distritos. No requiere autenticación y tiene CORS abierto.\n\nEl código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2 dígitos) + distrito (2 dígitos). En las rutas, cantón y distrito van sin ceros a la izquierda. La numeración puede tener saltos porque los códigos de distritos que cambiaron de cantón se retiran. Un 404 significa que el código no existe, y su cuerpo es HTML, no JSON.",
+    "license": { "name": "MIT", "identifier": "MIT" },
+    "contact": { "name": "Carl De Pass", "url": "https://github.com/ryze-cr/ubicaciones-cr/issues" }
+  },
+  "externalDocs": {
+    "description": "Guía para agentes de IA (llms.txt)",
+    "url": "https://ubicaciones-cr.ryze-cr.workers.dev/llms.txt"
+  },
+  "servers": [{ "url": "https://ubicaciones-cr.ryze-cr.workers.dev" }],
+  "paths": {
+    "/provincias.json": {
+      "get": {
+        "operationId": "listarProvincias",
+        "summary": "Lista las 7 provincias",
+        "responses": {
+          "200": {
+            "description": "Objeto cuyas claves son el número de provincia y los valores su nombre.",
+            "content": { "application/json": {
+              "schema": { "$ref": "#/components/schemas/MapaNombres" },
+              "example": { "1": "San José", "2": "Alajuela", "3": "Cartago", "4": "Heredia", "5": "Guanacaste", "6": "Puntarenas", "7": "Limón" }
+            } }
+          }
+        }
+      }
+    },
+    "/provincia/{provincia}/cantones.json": {
+      "get": {
+        "operationId": "listarCantones",
+        "summary": "Lista los cantones de una provincia",
+        "parameters": [{ "$ref": "#/components/parameters/provincia" }],
+        "responses": {
+          "200": {
+            "description": "Objeto cuyas claves son el número de cantón (sin ceros a la izquierda) y los valores su nombre.",
+            "content": { "application/json": {
+              "schema": { "$ref": "#/components/schemas/MapaNombres" },
+              "example": { "1": "San José", "2": "Escazú", "3": "Desamparados" }
+            } }
+          },
+          "404": { "$ref": "#/components/responses/NoExiste" }
+        }
+      }
+    },
+    "/provincia/{provincia}/canton/{canton}/distritos.json": {
+      "get": {
+        "operationId": "listarDistritos",
+        "summary": "Lista los distritos de un cantón",
+        "parameters": [
+          { "$ref": "#/components/parameters/provincia" },
+          { "name": "canton", "in": "path", "required": true, "description": "Número de cantón dentro de la provincia, sin ceros a la izquierda.", "schema": { "type": "integer", "minimum": 1 }, "example": 3 }
+        ],
+        "responses": {
+          "200": {
+            "description": "Objeto cuyas claves son el número de distrito (sin ceros a la izquierda) y los valores su nombre. Puede haber saltos en la numeración.",
+            "content": { "application/json": {
+              "schema": { "$ref": "#/components/schemas/MapaNombres" },
+              "example": { "1": "Desamparados", "2": "San Miguel", "3": "San Juan de Dios", "4": "San Rafael Arriba", "5": "San Antonio" }
+            } }
+          },
+          "404": { "$ref": "#/components/responses/NoExiste" }
+        }
+      }
+    },
+    "/codigo-postal/{codigoPostal}.json": {
+      "get": {
+        "operationId": "buscarPorCodigoPostal",
+        "summary": "Obtiene un distrito, su cantón y su provincia a partir del código postal",
+        "description": "También sirve para validar un código postal: 200 si existe, 404 si no.",
+        "parameters": [
+          { "name": "codigoPostal", "in": "path", "required": true, "description": "Código postal de 5 dígitos (PCCDD).", "schema": { "type": "string", "pattern": "^[1-7][0-9]{4}$" }, "example": "10305" }
+        ],
+        "responses": {
+          "200": {
+            "description": "El distrito encontrado.",
+            "content": { "application/json": {
+              "schema": { "$ref": "#/components/schemas/Distrito" },
+              "example": { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados", "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, "area_km2": 2.1 }
+            } }
+          },
+          "404": { "$ref": "#/components/responses/NoExiste" }
+        }
+      }
+    },
+    "/distritos.json": {
+      "get": {
+        "operationId": "listarTodosLosDistritos",
+        "summary": "Lista plana de los 494 distritos con su código postal",
+        "description": "Conviene descargarla una vez para buscar por nombre o hacer muchas consultas.",
+        "responses": {
+          "200": {
+            "description": "Arreglo de distritos.",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Distrito" } } } }
+          }
+        }
+      }
+    },
+    "/todo.json": {
+      "get": {
+        "operationId": "obtenerArbolCompleto",
+        "summary": "Árbol completo: provincias, cantones y distritos con códigos oficiales y áreas",
+        "responses": {
+          "200": {
+            "description": "Fuente de los datos y árbol de la división territorial.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArbolCompleto" } } }
+          }
+        }
+      }
+    },
+    "/meta.json": {
+      "get": {
+        "operationId": "obtenerMetadatos",
+        "summary": "Fuente, edición y totales de los datos",
+        "responses": {
+          "200": {
+            "description": "Metadatos.",
+            "content": { "application/json": { "schema": {
+              "type": "object",
+              "properties": {
+                "fuente": { "$ref": "#/components/schemas/Fuente" },
+                "totales": { "$ref": "#/components/schemas/Totales" }
+              },
+              "required": ["fuente", "totales"]
+            } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "provincia": { "name": "provincia", "in": "path", "required": true, "description": "Número de provincia: 1 San José, 2 Alajuela, 3 Cartago, 4 Heredia, 5 Guanacaste, 6 Puntarenas, 7 Limón.", "schema": { "type": "integer", "minimum": 1, "maximum": 7 }, "example": 1 }
+    },
+    "responses": {
+      "NoExiste": {
+        "description": "El código no existe en la división territorial vigente. El cuerpo es una página HTML.",
+        "content": { "text/html": { "schema": { "type": "string" } } }
+      }
+    },
+    "schemas": {
+      "MapaNombres": {
+        "type": "object",
+        "description": "Claves: número (como string, sin ceros a la izquierda). Valores: nombre oficial.",
+        "additionalProperties": { "type": "string" }
+      },
+      "Distrito": {
+        "type": "object",
+        "properties": {
+          "codigo_postal": { "type": "string", "pattern": "^[1-7][0-9]{4}$", "description": "Código oficial del distrito (PCCDD)." },
+          "distrito": { "type": "string" },
+          "canton": { "type": "string" },
+          "provincia": { "type": "string" },
+          "codigos": {
+            "type": "object",
+            "properties": {
+              "provincia": { "type": "integer" },
+              "canton": { "type": "integer" },
+              "distrito": { "type": "integer" }
+            },
+            "required": ["provincia", "canton", "distrito"]
+          },
+          "area_km2": { "type": ["number", "null"], "description": "Área en km². Es null cuando el IGN no la publica (hoy solo Duacarí, 70605)." }
+        },
+        "required": ["codigo_postal", "distrito", "canton", "provincia", "codigos", "area_km2"]
+      },
+      "Fuente": {
+        "type": "object",
+        "properties": {
+          "nombre": { "type": "string" },
+          "institucion": { "type": "string" },
+          "edicion": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "totales_oficiales": { "$ref": "#/components/schemas/Totales" },
+          "extraido": { "type": "string", "format": "date" }
+        }
+      },
+      "Totales": {
+        "type": "object",
+        "properties": {
+          "provincias": { "type": "integer" },
+          "cantones": { "type": "integer" },
+          "distritos": { "type": "integer" }
+        }
+      },
+      "ArbolCompleto": {
+        "type": "object",
+        "properties": {
+          "fuente": { "$ref": "#/components/schemas/Fuente" },
+          "provincias": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "codigo": { "type": "string", "description": "1 dígito, por ejemplo \"1\"." },
+                "nombre": { "type": "string" },
+                "area_km2": { "type": "number" },
+                "cantones": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "codigo": { "type": "string", "description": "3 dígitos, por ejemplo \"103\"." },
+                      "nombre": { "type": "string" },
+                      "area_km2": { "type": "number" },
+                      "distritos": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "codigo": { "type": "string", "description": "5 dígitos, igual al código postal." },
+                            "nombre": { "type": "string" },
+                            "area_km2": { "type": ["number", "null"] }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

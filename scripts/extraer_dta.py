@@ -10,7 +10,8 @@ Para actualizar a una nueva edición del IGN (sale cada dos años en snitcr.go.c
     1. python scripts/extraer_dta.py <PDF nuevo> --edicion <año> --url <url del PDF>
     2. python scripts/generar_api.py
     3. python scripts/generar_imagen_og.py
-    4. Actualizar la edición y los totales en public/index.html y la fecha en public/sitemap.xml
+    4. Actualizar la edición y los totales en public/index.html, public/llms.txt y
+       public/openapi.json, y la fecha en public/sitemap.xml
     5. python scripts/validar.py
 Si una corrección ya no aplica (por ejemplo, el IGN agregó Duacarí a la tabla), el script
 lo avisa: hay que quitarla de data/correcciones.json.
