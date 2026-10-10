@@ -1,4 +1,4 @@
-// Demo, búsqueda por código postal y explorador de la página de documentación.
+// Demo y búsqueda por código postal de la página de documentación.
 // Los textos cambian según el atributo lang del <html> (es o en).
 
 const TEXTOS = {
@@ -8,15 +8,8 @@ const TEXTOS = {
     elegirDistrito: 'Elegí un distrito',
     formatoCP: 'Son 5 dígitos y el primero va de 1 a 7.',
     cpNoExiste: 'Ese código postal no existe.',
-    copiado: (d) => `Copiado: ${d.codigo} · ${d.nombre}`,
-    codigoDe: (d) => `Código postal de ${d.nombre}: ${d.codigo}`,
-    copiarTitulo: 'Copiar código postal',
-    cantidad: (n, enCanton) => `${n} ${enCanton ? (n === 1 ? 'distrito' : 'distritos') : (n === 1 ? 'cantón' : 'cantones')}`,
-    sinResultados: 'Sin resultados',
-    pasoCanton: 'elegí un cantón',
-    filtrarCantones: (nombre) => `Filtrar cantones de ${nombre}…`,
-    filtrarDistritos: (nombre) => `Filtrar distritos de ${nombre}…`,
-    errorDatos: 'No se pudieron cargar los datos.',
+    copiar: 'Copiar',
+    copiado: 'Copiado',
   },
   en: {
     elegirProvincia: 'Choose a province',
@@ -24,15 +17,8 @@ const TEXTOS = {
     elegirDistrito: 'Choose a district',
     formatoCP: 'Postal codes have 5 digits and start with 1 to 7.',
     cpNoExiste: 'That postal code does not exist.',
-    copiado: (d) => `Copied: ${d.codigo} · ${d.nombre}`,
-    codigoDe: (d) => `Postal code for ${d.nombre}: ${d.codigo}`,
-    copiarTitulo: 'Copy postal code',
-    cantidad: (n, enCanton) => `${n} ${enCanton ? (n === 1 ? 'district' : 'districts') : (n === 1 ? 'canton' : 'cantons')}`,
-    sinResultados: 'No results',
-    pasoCanton: 'choose a canton',
-    filtrarCantones: (nombre) => `Filter cantons in ${nombre}…`,
-    filtrarDistritos: (nombre) => `Filter districts in ${nombre}…`,
-    errorDatos: 'Could not load the data.',
+    copiar: 'Copy',
+    copiado: 'Copied',
   },
 };
 const T = TEXTOS[document.documentElement.lang] || TEXTOS.es;
@@ -61,7 +47,26 @@ function fill(select, data, placeholder) {
   select.disabled = false;
 }
 function reset(select) { select.replaceChildren(crear('option', { value: '' }, '—')); select.disabled = true; }
-function showCP(text = '', route = '') { $('cp').textContent = text; $('cp-ruta').textContent = route; }
+function showCP(text = '', route = '') {
+  $('cp').textContent = text;
+  $('cp-ruta').textContent = route;
+  const boton = $('copiar-cp');
+  boton.hidden = !text;
+  boton.textContent = T.copiar;
+  boton.classList.remove('listo');
+}
+
+$('copiar-cp').addEventListener('click', async () => {
+  const boton = $('copiar-cp');
+  try {
+    await navigator.clipboard.writeText($('cp').textContent);
+    boton.textContent = T.copiado;
+    boton.classList.add('listo');
+  } catch {
+    // Sin acceso al portapapeles: seleccionar el código para copiarlo a mano
+    getSelection().selectAllChildren($('cp'));
+  }
+});
 
 getJSON('/provincias.json').then((d) => fill($('sel-provincia'), d, T.elegirProvincia));
 
@@ -91,47 +96,3 @@ $('in-cp').addEventListener('input', async (e) => {
 });
 $('form-cp').addEventListener('submit', (e) => e.preventDefault());
 
-// Explorador: provincia → cantón → distritos con código postal, a partir de /todo.json
-const ex = { provincias: [], prov: null, canton: null };
-const sinTildes = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-
-function elegirProvincia(p) { ex.prov = p; ex.canton = null; $('ex-filtro').value = ''; renderExplorador(); }
-function elegirCanton(c) { ex.canton = c; $('ex-filtro').value = ''; renderExplorador(); $('ex-filtro').focus(); }
-
-async function copiar(distrito) {
-  try {
-    await navigator.clipboard.writeText(distrito.codigo);
-    $('ex-estado').textContent = T.copiado(distrito);
-  } catch {
-    $('ex-estado').textContent = T.codigoDe(distrito);
-  }
-}
-
-function renderItems() {
-  const filtro = sinTildes($('ex-filtro').value.trim());
-  const enCanton = Boolean(ex.canton);
-  const lista = (enCanton ? ex.canton.distritos : ex.prov.cantones)
-    .filter((x) => !filtro || sinTildes(x.nombre).includes(filtro) || x.codigo.includes(filtro));
-  $('ex-items').replaceChildren(...lista.map((x) => enCanton
-    ? crear('button', { type: 'button', class: 'chip distrito', title: T.copiarTitulo, onclick: () => copiar(x) },
-        crear('span', { class: 'num' }, x.codigo), x.nombre)
-    : crear('button', { type: 'button', class: 'chip', onclick: () => elegirCanton(x) },
-        crear('span', { class: 'num' }, x.codigo.slice(1)), x.nombre)));
-  $('ex-estado').textContent = lista.length ? T.cantidad(lista.length, enCanton) : T.sinResultados;
-}
-
-function renderExplorador() {
-  $('ex-provincias').replaceChildren(...ex.provincias.map((p) => crear('li', {},
-    crear('button', { type: 'button', 'aria-pressed': String(p === ex.prov), onclick: () => elegirProvincia(p) }, p.nombre))));
-  const sep = () => crear('span', { 'aria-hidden': 'true' }, '›');
-  $('ex-ruta').replaceChildren(...(ex.canton
-    ? [crear('button', { type: 'button', onclick: () => elegirProvincia(ex.prov) }, ex.prov.nombre), sep(),
-       crear('span', { class: 'actual', 'aria-current': 'location' }, ex.canton.nombre)]
-    : [crear('span', { class: 'actual', 'aria-current': 'location' }, ex.prov.nombre), sep(), crear('span', {}, T.pasoCanton)]));
-  $('ex-filtro').placeholder = ex.canton ? T.filtrarDistritos(ex.canton.nombre) : T.filtrarCantones(ex.prov.nombre);
-  renderItems();
-}
-
-$('ex-filtro').addEventListener('input', renderItems);
-getJSON('/todo.json').then((t) => { ex.provincias = t.provincias; elegirProvincia(t.provincias[0]); })
-  .catch(() => { $('ex-provincias').replaceChildren(crear('li', { class: 'ex-estado' }, T.errorDatos)); });

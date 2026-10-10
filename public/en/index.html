@@ -65,6 +65,11 @@
     <p class="source">Source: <a id="fuente" href="https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf">Administrative Territorial Division (DTA 2026)</a>, National Geographic Institute of Costa Rica (IGN).</p>
   </header>
 
+  <div class="intro-demo">
+    <h2 id="explorar-titulo">Browse locations</h2>
+    <p class="explorar-lede">Choose a province, a canton and a district to see its postal code, or type a code to find out which district it belongs to.</p>
+  </div>
+
   <section class="demo" aria-labelledby="demo-titulo">
     <h2 id="demo-titulo" style="margin-top:0">Try it</h2>
     <div class="selects">
@@ -72,30 +77,12 @@
       <div><label for="sel-canton">Canton</label><select id="sel-canton" disabled><option value="">—</option></select></div>
       <div><label for="sel-distrito">District</label><select id="sel-distrito" disabled><option value="">—</option></select></div>
     </div>
-    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><small id="cp-ruta"></small></div>
+    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><button type="button" class="copiar" id="copiar-cp" hidden>Copy</button><small id="cp-ruta"></small></div>
     <form class="lookup" id="form-cp">
       <label for="in-cp" style="flex-basis:100%;margin:0">Look up a postal code</label>
       <input id="in-cp" inputmode="numeric" maxlength="5" pattern="[1-7][0-9]{4}" placeholder="10305" autocomplete="off">
       <output id="out-cp" for="in-cp"></output>
     </form>
-  </section>
-
-  <section aria-labelledby="explorar-titulo">
-    <h2 id="explorar-titulo">Browse locations</h2>
-    <p class="explorar-lede">Choose a province, then a canton, to see its districts with their postal codes. Tap a district to copy its code.</p>
-    <div class="explorador">
-      <nav class="ex-provincias" aria-labelledby="ex-titulo-provincias">
-        <span class="ex-titulo" id="ex-titulo-provincias">Provinces</span>
-        <ul id="ex-provincias"><li class="ex-estado">Loading…</li></ul>
-      </nav>
-      <div class="ex-panel">
-        <nav class="ex-ruta" id="ex-ruta" aria-label="Selected location"></nav>
-        <label class="sr-only" for="ex-filtro">Filter</label>
-        <input id="ex-filtro" type="search" autocomplete="off" placeholder="Filter…">
-        <div class="ex-items" id="ex-items"></div>
-        <p class="ex-estado" id="ex-estado" aria-live="polite"></p>
-      </div>
-    </div>
   </section>
 
   <h2>Endpoints</h2>
