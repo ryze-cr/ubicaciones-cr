@@ -24,7 +24,7 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
   `{"codigo_postal":"10305","distrito":"San Antonio","canton":"Desamparados","provincia":"San José","codigos":{"provincia":1,"canton":3,"distrito":5},"area_km2":2.1}`
 - [/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/distritos.json): arreglo con los 494 distritos, cada uno con la misma forma que `/codigo-postal/{PCCDD}.json`. Es la mejor opción para buscar por nombre.
 - [/todo.json](https://ubicaciones-cr.ryze-cr.workers.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`.
-- [/meta.json](https://ubicaciones-cr.ryze-cr.workers.dev/meta.json): fuente, edición y totales.
+- [/meta.json](https://ubicaciones-cr.ryze-cr.workers.dev/meta.json): versión de la API (semver), fuente, edición y totales.
 - [/openapi.json](https://ubicaciones-cr.ryze-cr.workers.dev/openapi.json): especificación OpenAPI 3.1 de todas las rutas.
 
 ## Tareas comunes

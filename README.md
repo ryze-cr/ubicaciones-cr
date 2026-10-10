@@ -20,7 +20,7 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 | `/codigo-postal/{PCCDD}.json` | Un distrito por su código postal, con su cantón y provincia |
 | `/distritos.json` | Lista plana de todos los distritos con código postal |
 | `/todo.json` | Árbol completo con códigos oficiales y áreas en km² |
-| `/meta.json` | Fuente, edición y totales |
+| `/meta.json` | Versión de la API, fuente, edición y totales |
 | `/openapi.json` | Especificación OpenAPI 3.1 |
 | `/llms.txt` | Guía de uso para agentes de IA |
 
