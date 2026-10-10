@@ -56,17 +56,18 @@ function showCP(text = '', route = '') {
   boton.classList.remove('listo');
 }
 
-$('copiar-cp').addEventListener('click', async () => {
-  const boton = $('copiar-cp');
+// Copia el texto y marca el botón; si no hay acceso al portapapeles, selecciona el texto para copiarlo a mano
+async function copiar(boton, texto, nodo) {
   try {
-    await navigator.clipboard.writeText($('cp').textContent);
+    await navigator.clipboard.writeText(texto);
     boton.textContent = T.copiado;
     boton.classList.add('listo');
   } catch {
-    // Sin acceso al portapapeles: seleccionar el código para copiarlo a mano
-    getSelection().selectAllChildren($('cp'));
+    getSelection().selectAllChildren(nodo);
   }
-});
+}
+
+$('copiar-cp').addEventListener('click', (e) => copiar(e.currentTarget, $('cp').textContent, $('cp')));
 
 getJSON('/provincias.json').then((d) => fill($('sel-provincia'), d, T.elegirProvincia));
 
@@ -91,7 +92,10 @@ $('in-cp').addEventListener('input', async (e) => {
   if (!/^[1-7]\d{4}$/.test(v)) { out.textContent = v ? T.formatoCP : ''; return; }
   try {
     const d = await getJSON(`/codigo-postal/${v}.json`);
-    out.replaceChildren(crear('span', { class: 'lugar' }, d.distrito),
+    const lugar = crear('span', { class: 'lugar' }, d.distrito);
+    const boton = crear('button', { type: 'button', class: 'copiar' }, T.copiar);
+    boton.addEventListener('click', () => copiar(boton, `${d.distrito}, ${d.canton}, ${d.provincia}`, out));
+    out.replaceChildren(crear('span', { class: 'lugar-fila' }, lugar, boton),
       crear('span', { class: 'lugar-ruta' }, `${d.canton} · ${d.provincia}`));
   } catch { out.textContent = T.cpNoExiste; }
 });
