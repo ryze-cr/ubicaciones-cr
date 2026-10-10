@@ -1,0 +1,10 @@
+{
+  // Sitio estático: Cloudflare sirve public/ sin ejecutar código propio.
+  "name": "ubicaciones-cr",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public",
+    // Rutas inexistentes responden public/404.html con estado 404.
+    "not_found_handling": "404-page"
+  }
+}

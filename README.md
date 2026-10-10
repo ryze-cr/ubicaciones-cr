@@ -72,7 +72,9 @@ python3 -m http.server 8787 --directory public
 
 ## Despliegue
 
-Es un sitio estático en `public/`, sin paso de build. En Cloudflare Pages: **Framework preset** None, **Build command** vacío y **Build output directory** `public`. El archivo `public/_headers` configura CORS y caché, y `public/404.html` hace que las rutas inexistentes respondan 404.
+Es un sitio estático en `public/`, sin paso de build, publicado como Worker de Cloudflare con solo archivos estáticos. `wrangler.jsonc` indica la carpeta y hace que las rutas inexistentes respondan 404 con `public/404.html`. `public/_headers` configura CORS y caché.
+
+Cloudflare publica automáticamente cada cambio que llega a `main`. Para publicar a mano: `npx wrangler deploy`.
 
 ## Créditos y licencia
 
