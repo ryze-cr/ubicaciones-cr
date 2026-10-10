@@ -1,0 +1,19 @@
+{
+ "agregar_distritos": [
+  {
+   "codigo": "70605",
+   "nombre": "Duacarí",
+   "area_km2": null,
+   "motivo": "El IGN lo cuenta en el total oficial pero lo omite en la tabla de detalle de las ediciones 2024, 2025 y 2026. Creado por Decreto 12091-G (27/11/1980)."
+  }
+ ],
+ "renombrar": [
+  {
+   "tipo": "canton",
+   "codigo": "613",
+   "de": "Puerto Jimenez",
+   "a": "Puerto Jiménez",
+   "motivo": "La tabla de cantones del IGN lo escribe sin tilde; la misma tabla escribe el distrito 61301 como 'Puerto Jiménez'."
+  }
+ ]
+}

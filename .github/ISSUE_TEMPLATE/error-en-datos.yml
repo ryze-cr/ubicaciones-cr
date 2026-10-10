@@ -1,0 +1,36 @@
+name: Error en los datos
+description: Un distrito, cantón, nombre o código postal que no coincide con la fuente oficial
+title: "[Datos] "
+labels: ["datos"]
+body:
+  - type: input
+    id: ruta
+    attributes:
+      label: Código postal o ruta afectada
+      placeholder: "10305 o /provincia/1/canton/3/distritos.json"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Qué dice la API
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Qué debería decir
+    validations:
+      required: true
+  - type: input
+    id: fuente
+    attributes:
+      label: Fuente oficial
+      description: Tabla de la DTA del IGN, ley o decreto publicado en La Gaceta.
+      placeholder: "Ley 10688, La Gaceta 98, 30/05/2025"
+    validations:
+      required: true
+  - type: textarea
+    id: notas
+    attributes:
+      label: Notas adicionales

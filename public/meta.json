@@ -1,0 +1,19 @@
+{
+ "fuente": {
+  "nombre": "División Territorial Administrativa 2026",
+  "institucion": "Instituto Geográfico Nacional (IGN), Registro Nacional de Costa Rica",
+  "edicion": "2026",
+  "url": "https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf",
+  "totales_oficiales": {
+   "provincias": 7,
+   "cantones": 84,
+   "distritos": 494
+  },
+  "extraido": "2026-10-10"
+ },
+ "totales": {
+  "provincias": 7,
+  "cantones": 84,
+  "distritos": 494
+ }
+}

@@ -1,0 +1,17 @@
+name: Sugerencia
+description: Una idea para mejorar la API o la documentación
+title: "[Sugerencia] "
+labels: ["mejora"]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: ¿Qué necesitás resolver?
+      description: Contá el caso de uso. Por ejemplo, "necesito buscar distritos por nombre".
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: ¿Cómo te imaginás la solución?
+      description: Opcional. Por ejemplo, un endpoint nuevo o un campo extra.

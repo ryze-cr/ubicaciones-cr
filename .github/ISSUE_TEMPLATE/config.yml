@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Reportar una vulnerabilidad
+    url: https://github.com/ryze-cr/ubicaciones-cr/security/advisories/new
+    about: Los problemas de seguridad se reportan en privado, no en un issue público.
+  - name: División Territorial Administrativa (IGN)
+    url: https://www.snitcr.go.cr/biblioteca_DTA_menu
+    about: La fuente oficial de los datos, para verificar antes de reportar un error.
