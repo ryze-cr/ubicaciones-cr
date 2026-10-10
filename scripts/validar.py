@@ -58,6 +58,9 @@ edicion = dta['fuente']['edicion']
 indice = (PUBLIC / 'index.html').read_text(encoding='utf-8')
 revisar(f'DTA {edicion}' in indice and f'{len(distritos)} distritos' in indice,
         f'index.html no menciona la DTA {edicion} o los {len(distritos)} distritos (SEO desactualizado)')
+ingles = (PUBLIC / 'en/index.html').read_text(encoding='utf-8')
+revisar(f'DTA {edicion}' in ingles and f'{len(distritos)} districts' in ingles,
+        f'en/index.html no menciona la DTA {edicion} o los {len(distritos)} districts')
 guia = (PUBLIC / 'llms.txt').read_text(encoding='utf-8')
 revisar(f'DTA {edicion}' in guia and f'{len(distritos)} distritos' in guia,
         f'llms.txt no menciona la DTA {edicion} o los {len(distritos)} distritos')
