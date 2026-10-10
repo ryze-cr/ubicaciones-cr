@@ -51,6 +51,9 @@ select:disabled { opacity: .5; }
 .lookup { display: flex; gap: 8px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
 .lookup input { flex: 1 1 180px; width: auto; font-family: var(--mono); }
 .lookup output { flex-basis: 100%; color: var(--muted); }
+.lookup output .lugar { display: block; margin-top: 6px; font-family: var(--serif); font-weight: 500; font-size: 1.9rem;
+                        line-height: 1.15; color: var(--accent); }
+.lookup output .lugar-ruta { display: block; margin-top: 4px; font-size: 1.05rem; color: var(--heading); }
 
 table { width: 100%; border-collapse: collapse; font-size: .95rem; }
 th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
