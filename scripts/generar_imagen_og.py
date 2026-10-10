@@ -14,7 +14,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 RAIZ = Path(__file__).resolve().parent.parent
-# Paleta Flashout Studio: Void, Carbon, Slate, Ash, Paper, Bolt
+# Paleta de la identidad visual
 FONDO, TARJETA, LINEA, TENUE, TEXTO, ACENTO = '#0B0B0D', '#151519', '#26262E', '#8A8A96', '#FAFAFA', '#FFD231'
 
 
