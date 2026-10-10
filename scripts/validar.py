@@ -54,6 +54,11 @@ for p in dta['provincias']:
             revisar(leer(f"codigo-postal/{d['codigo']}.json")['distrito'] == d['nombre'], f"codigo-postal/{d['codigo']}.json desactualizado")
 revisar(len(list((PUBLIC / 'codigo-postal').glob('*.json'))) == len(distritos), 'sobran archivos en codigo-postal/')
 revisar(len(leer('distritos.json')) == len(distritos), 'distritos.json desactualizado')
+edicion = dta['fuente']['edicion']
+indice = (PUBLIC / 'index.html').read_text(encoding='utf-8')
+revisar(f'DTA {edicion}' in indice and f'{len(distritos)} distritos' in indice,
+        f'index.html no menciona la DTA {edicion} o los {len(distritos)} distritos (SEO desactualizado)')
+revisar((PUBLIC / 'og.png').exists(), 'falta public/og.png (correr scripts/generar_imagen_og.py)')
 revisar((PUBLIC / '404.html').exists(), 'falta public/404.html (sin él, Cloudflare Pages responde 200 a rutas inexistentes)')
 
 if errores:

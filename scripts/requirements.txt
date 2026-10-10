@@ -1,1 +1,2 @@
 pdfplumber==0.11.10
+pillow==12.3.0

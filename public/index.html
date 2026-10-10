@@ -3,81 +3,145 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ubicaciones CR · API</title>
-<meta name="description" content="API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica, según la División Territorial Administrativa oficial del IGN.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='13' r='6' fill='none' stroke='%230f766e' stroke-width='3'/><path d='M16 31 7 18h18z' fill='%230f766e'/></svg>">
+<title>API de provincias, cantones, distritos y códigos postales de Costa Rica</title>
+<meta name="description" content="API JSON gratuita con las 7 provincias, 84 cantones, 494 distritos y códigos postales de Costa Rica, según la División Territorial Administrativa 2026 del IGN. Sin API key y con CORS abierto.">
+<link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0B0B0D">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CR">
+<meta property="og:site_name" content="Ubicaciones de Costa Rica">
+<meta property="og:title" content="API de provincias, cantones, distritos y códigos postales de Costa Rica">
+<meta property="og:description" content="JSON gratuito con la División Territorial Administrativa 2026 del IGN: 7 provincias, 84 cantones y 494 distritos. Sin API key.">
+<meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/">
+<meta property="og:image" content="https://ubicaciones-cr.ryze-cr.workers.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ubicaciones de Costa Rica: 7 provincias, 84 cantones y 494 distritos">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Ubicaciones de Costa Rica",
+      "url": "https://ubicaciones-cr.ryze-cr.workers.dev/",
+      "inLanguage": "es-CR"
+    },
+    {
+      "@type": "Dataset",
+      "name": "Provincias, cantones, distritos y códigos postales de Costa Rica (DTA 2026)",
+      "description": "División territorial administrativa de Costa Rica en formato JSON: 7 provincias, 84 cantones y 494 distritos, con el código oficial de cada distrito, que es también su código postal, y el área en km². Basado en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN).",
+      "url": "https://ubicaciones-cr.ryze-cr.workers.dev/",
+      "sameAs": "https://github.com/ryze-cr/ubicaciones-cr",
+      "version": "DTA 2026",
+      "inLanguage": "es",
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT",
+      "keywords": ["Costa Rica", "provincias", "cantones", "distritos", "código postal", "división territorial administrativa", "IGN", "API", "JSON"],
+      "creator": { "@type": "Person", "name": "Carl De Pass", "url": "https://github.com/ryze-cr" },
+      "isBasedOn": "https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf",
+      "spatialCoverage": { "@type": "Place", "name": "Costa Rica" },
+      "distribution": [
+        { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://ubicaciones-cr.ryze-cr.workers.dev/todo.json" },
+        { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://ubicaciones-cr.ryze-cr.workers.dev/distritos.json" }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* Sistema de color y tipografía de Flashout Studio (brand board v9.0) */
   :root {
-    color-scheme: light dark;
-    --bg: #fafaf9; --surface: #ffffff; --fg: #1c1917; --muted: #57534e; --line: #e7e5e4;
-    --accent: #0f766e; --accent-soft: #ccfbf1; --code-bg: #f5f5f4;
-    --radius: 10px;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color-scheme: dark light;
+    /* Oscuro (principal): Void, Carbon, Slate, Ash, Mist, Paper · acento Bolt */
+    --bg: #0B0B0D; --surface: #151519; --line: #26262E; --code-bg: #151519;
+    --heading: #FAFAFA; --fg: #C9C9D1; --muted: #8A8A96;
+    --accent: #FFD231; --accent-soft: rgba(255, 210, 49, .12);
+    --radius: 12px;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #141413; --surface: #1c1b1a; --fg: #f5f5f4; --muted: #a8a29e; --line: #2e2c2a;
-      --accent: #2dd4bf; --accent-soft: #134e4a; --code-bg: #232120;
+  /* Claro: Paper de fondo, acento Ember (nunca Bolt sobre blanco) */
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #FAFAFA; --surface: #FFFFFF; --line: #C9C9D1; --code-bg: #F2F2F4;
+      --heading: #0B0B0D; --fg: #26262E; --muted: #5A5A66;
+      --accent: #B45309; --accent-soft: rgba(180, 83, 9, .06);
     }
   }
-  :root[data-theme="dark"] {
-    --bg: #141413; --surface: #1c1b1a; --fg: #f5f5f4; --muted: #a8a29e; --line: #2e2c2a;
-    --accent: #2dd4bf; --accent-soft: #134e4a; --code-bg: #232120;
+  :root[data-theme="light"] {
+    --bg: #FAFAFA; --surface: #FFFFFF; --line: #C9C9D1; --code-bg: #F2F2F4;
+    --heading: #0B0B0D; --fg: #26262E; --muted: #5A5A66;
+    --accent: #B45309; --accent-soft: rgba(180, 83, 9, .06);
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.65 var(--sans); }
   .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
-  header { padding: 56px 0 32px; }
-  h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.02em; }
-  h2 { font-size: 1.3rem; margin: 48px 0 12px; letter-spacing: -0.01em; }
+  header { padding: 64px 0 32px; }
+  h1, h2 { font-family: var(--serif); font-weight: 500; color: var(--heading); }
+  h1 { font-size: clamp(2rem, 5.5vw, 2.9rem); line-height: 1.12; margin: 0 0 14px; letter-spacing: -0.015em; }
+  h2 { font-size: 1.5rem; line-height: 1.25; margin: 56px 0 14px; }
   p { margin: 0 0 12px; }
+  b, strong { color: var(--heading); font-weight: 500; }
   .lede { color: var(--muted); font-size: 1.1rem; max-width: 40rem; }
-  a { color: var(--accent); }
-  code { font-family: var(--mono); font-size: .9em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); color: var(--heading); padding: 1px 5px; border-radius: 4px; }
   pre { font-family: var(--mono); font-size: .85rem; background: var(--code-bg); border: 1px solid var(--line);
-        border-radius: var(--radius); padding: 14px 16px; overflow-x: auto; margin: 0 0 12px; line-height: 1.5; }
-  pre code { background: none; padding: 0; }
+        border-radius: var(--radius); padding: 14px 16px; overflow-x: auto; margin: 0 0 12px; line-height: 1.55; color: var(--fg); }
+  pre code { background: none; padding: 0; color: inherit; }
 
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 28px 0 8px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 32px 0 10px; }
   .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
-  .stat b { display: block; font-size: 1.8rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .stat span { color: var(--muted); font-size: .9rem; }
+  .stat b { display: block; font-family: var(--mono); font-size: 1.9rem; line-height: 1.1; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
   .source { color: var(--muted); font-size: .9rem; }
 
   .demo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
   .selects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 4px; }
-  select, input { width: 100%; font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line);
+  label { display: block; font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+  select, input { width: 100%; font: inherit; color: var(--heading); background: var(--bg); border: 1px solid var(--line);
                   border-radius: 8px; padding: 9px 10px; }
   select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   select:disabled { opacity: .5; }
   .result { margin-top: 16px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; min-height: 2.6rem; }
-  .cp { font-family: var(--mono); font-size: 1.9rem; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
-  .result small { color: var(--muted); }
+  .cp { font-family: var(--mono); font-size: 2rem; font-weight: 500; color: var(--accent); letter-spacing: .04em; }
+  .result small { color: var(--muted); font-family: var(--mono); }
   .lookup { display: flex; gap: 8px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
   .lookup input { flex: 1 1 180px; width: auto; font-family: var(--mono); }
   .lookup output { flex-basis: 100%; color: var(--muted); }
 
   table { width: 100%; border-collapse: collapse; font-size: .95rem; }
   th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-weight: 500; font-size: .85rem; }
+  th { color: var(--muted); font-family: var(--mono); font-weight: 400; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
   td code { white-space: nowrap; }
   .table-scroll { overflow-x: auto; }
-  .tag { display: inline-block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
-         background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: 1px; }
-  footer { margin: 64px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .08em;
+         background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px; }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; padding: 14px 0; font-weight: 500; color: var(--heading); }
+  .faq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .faq details p { color: var(--muted); }
+  footer { margin: 72px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
 
   @media (max-width: 640px) {
-    header { padding-top: 36px; }
+    header { padding-top: 40px; }
     .selects { grid-template-columns: 1fr; }
-    .stat b { font-size: 1.4rem; }
+    .stat b { font-size: 1.45rem; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Ubicaciones de Costa Rica</h1>
+    <h1>API de ubicaciones de Costa Rica</h1>
     <p class="lede">API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica. Archivos estáticos, CORS abierto y sin API key.</p>
     <div class="stats" aria-live="polite">
       <div class="stat"><b id="n-provincias">7</b><span>provincias</span></div>
@@ -133,8 +197,29 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
   <p>El código postal de Costa Rica es el código oficial del distrito: <b>P</b> (provincia, 1 dígito) + <b>CC</b> (cantón, 2 dígitos) + <b>DD</b> (distrito, 2 dígitos). Por ejemplo, San Antonio de Desamparados es <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
   <p>Cuando un distrito pasa a otro cantón, su código viejo se retira y no se reutiliza, así que puede haber saltos en la numeración (por ejemplo, Grecia no tiene distrito 6).</p>
 
-  <h2>Compatibilidad</h2>
-  <p>Las tres primeras rutas tienen la misma forma que la API de <a href="https://ubicaciones.paginasweb.cr">ubicaciones.paginasweb.cr</a>, así que podés cambiar solo la URL base. Las diferencias: los nombres son los oficiales del IGN, con tildes (el cantón 1 de cada provincia se llama por su nombre, no "Central"), y los datos están al día con la edición 2026.</p>
+  <h2>Preguntas frecuentes</h2>
+  <div class="faq">
+    <details>
+      <summary>¿Cuántas provincias, cantones y distritos tiene Costa Rica?</summary>
+      <p>Según la División Territorial Administrativa 2026 del IGN, Costa Rica tiene <b>7 provincias, 84 cantones y 494 distritos</b>. Los cantones más recientes son Monteverde y Puerto Jiménez, en Puntarenas. Los distritos más nuevos son Pijije (Bagaces) y Cabagra (Buenos Aires), creados por ley en mayo de 2025.</p>
+    </details>
+    <details>
+      <summary>¿Cuál es el código postal de un distrito?</summary>
+      <p>Es el código oficial del distrito, de 5 dígitos. Podés buscarlo arriba en el demo, o consultar <code>/codigo-postal/{código}.json</code> para obtener el distrito, cantón y provincia de un código postal.</p>
+    </details>
+    <details>
+      <summary>¿La API es gratis? ¿Necesito una API key?</summary>
+      <p>Es gratis y no necesita API key ni registro. Tiene CORS abierto, así que la podés usar directamente desde el navegador, una app móvil o un servidor.</p>
+    </details>
+    <details>
+      <summary>¿Cada cuánto se actualizan los datos?</summary>
+      <p>Cuando el Instituto Geográfico Nacional publica una nueva edición de la División Territorial Administrativa, que sale cada dos años, o cuando una ley crea un cantón o distrito nuevo. <code>/meta.json</code> indica la edición vigente.</p>
+    </details>
+    <details>
+      <summary>¿Sirve como reemplazo de ubicaciones.paginasweb.cr?</summary>
+      <p>Sí. Las rutas <code>/provincias.json</code>, <code>/provincia/{p}/cantones.json</code> y <code>/provincia/{p}/canton/{c}/distritos.json</code> tienen la misma forma, así que solo cambiás la URL base.</p>
+    </details>
+  </div>
 
   <footer>
     <p>Hecho gracias a <a href="https://github.com/ryze-cr">Carl De Pass</a>.</p>
