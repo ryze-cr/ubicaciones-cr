@@ -62,6 +62,11 @@ async function copiar(boton, texto, nodo) {
     await navigator.clipboard.writeText(texto);
     boton.textContent = T.copiado;
     boton.classList.add('listo');
+    clearTimeout(boton.reinicio);
+    boton.reinicio = setTimeout(() => {
+      boton.textContent = T.copiar;
+      boton.classList.remove('listo');
+    }, 2000);
   } catch {
     getSelection().selectAllChildren(nodo);
   }
