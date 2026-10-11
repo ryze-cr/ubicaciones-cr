@@ -9,6 +9,7 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 - **7 provincias, 84 cantones y 494 distritos**
 - Sin API key, sin registro y con CORS abierto
 - El código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2) + distrito (2)
+- Cada distrito indica si está en la Gran Área Metropolitana (`gam`), según el Plan GAM 2013-2030
 
 ## Endpoints
 
@@ -19,6 +20,7 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 | `/provincia/{p}/canton/{c}/distritos.json` | Distritos de un cantón |
 | `/codigo-postal/{PCCDD}.json` | Un distrito por su código postal, con su cantón y provincia |
 | `/distritos.json` | Lista plana de todos los distritos con código postal |
+| `/gam.json` | Códigos postales dentro y fuera de la Gran Área Metropolitana (GAM) |
 | `/todo.json` | Árbol completo con códigos oficiales y áreas en km² |
 | `/meta.json` | Versión de la API, fuente, edición y totales |
 | `/openapi.json` | Especificación OpenAPI 3.1 |
@@ -31,7 +33,7 @@ const cantones = await fetch('https://ubicaciones-cr.ryze-cr.workers.dev/provinc
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
 
 const distrito = await fetch('https://ubicaciones-cr.ryze-cr.workers.dev/codigo-postal/10305.json').then(r => r.json());
-// { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados", "provincia": "San José", ... }
+// { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados", "provincia": "San José", "gam": true, ... }
 ```
 
 Las tres primeras rutas tienen la misma forma que [ubicaciones.paginasweb.cr](https://ubicaciones.paginasweb.cr), así que para migrar solo cambiás la URL base.

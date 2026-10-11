@@ -21,8 +21,9 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 - [/provincia/{p}/cantones.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/cantones.json): cantones de la provincia `p` (1–7), como `{ "número": "nombre" }`. Ejemplo para `p=1`: `{"1":"San José","2":"Escazú","3":"Desamparados",...}`
 - [/provincia/{p}/canton/{c}/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/canton/3/distritos.json): distritos del cantón `c` de la provincia `p`, como `{ "número": "nombre" }`. Ejemplo para `p=1, c=3`: `{"1":"Desamparados","2":"San Miguel",...,"5":"San Antonio",...}`
 - [/codigo-postal/{PCCDD}.json](https://ubicaciones-cr.ryze-cr.workers.dev/codigo-postal/10305.json): un distrito a partir de su código postal. Respuesta:
-  `{"codigo_postal":"10305","distrito":"San Antonio","canton":"Desamparados","provincia":"San José","codigos":{"provincia":1,"canton":3,"distrito":5},"area_km2":2.1}`
+  `{"codigo_postal":"10305","distrito":"San Antonio","canton":"Desamparados","provincia":"San José","codigos":{"provincia":1,"canton":3,"distrito":5},"area_km2":2.1,"gam":true}`
 - [/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/distritos.json): arreglo con los 494 distritos, cada uno con la misma forma que `/codigo-postal/{PCCDD}.json`. Es la mejor opción para buscar por nombre.
+- [/gam.json](https://ubicaciones-cr.ryze-cr.workers.dev/gam.json): las dos listas de códigos postales, `gam` y `no_gam`, con la definición y el criterio usados.
 - [/todo.json](https://ubicaciones-cr.ryze-cr.workers.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`.
 - [/meta.json](https://ubicaciones-cr.ryze-cr.workers.dev/meta.json): versión de la API (semver), fuente, edición y totales.
 - [/openapi.json](https://ubicaciones-cr.ryze-cr.workers.dev/openapi.json): especificación OpenAPI 3.1 de todas las rutas.
@@ -32,10 +33,12 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 - **Obtener provincia, cantón y distrito de un código postal:** `GET /codigo-postal/{código}.json`. Si responde 404, el código no existe.
 - **Validar un código postal:** igual que el anterior. 200 = válido, 404 = inválido.
 - **Armar selectores en cascada (provincia → cantón → distrito):** `/provincias.json`, después `/provincia/{p}/cantones.json`, después `/provincia/{p}/canton/{c}/distritos.json`. El código postal se arma como `p + pad2(c) + pad2(d)`.
+- **Saber si un código postal está en la GAM (por ejemplo, para tarifas de envío):** leé el campo `gam` de `/codigo-postal/{código}.json`, o descargá `/gam.json` una vez.
 - **Buscar un distrito por nombre:** descargá `/distritos.json` y filtrá por `distrito`, ignorando tildes y mayúsculas. Hay nombres repetidos en distintos cantones (por ejemplo, varios "San Rafael"), así que mostrá también el cantón y la provincia.
 
 ## Notas sobre los datos
 
+- `gam` indica si el distrito pertenece a la Gran Área Metropolitana según el Plan GAM 2013-2030 del MIVAH. Si el límite oficial parte un distrito, cuenta como GAM cuando al menos la mitad de sus edificaciones quedan dentro. Es la definición oficial, no la de un courier: Grecia, Naranjo y San Ramón, por ejemplo, no son GAM.
 - `area_km2` puede ser `null`. Hoy solo pasa con Duacarí (70605, Guácimo): el IGN lo cuenta en el total oficial, pero no publica su área en la tabla de detalle.
 - Fuente: [División Territorial Administrativa 2026, IGN](https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf).
 

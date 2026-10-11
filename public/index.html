@@ -119,6 +119,7 @@
       <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Distritos de un cantón</td></tr>
       <tr><td><code>/codigo-postal/{PCCDD}.json</code><span class="tag">nuevo</span></td><td>Un distrito por su código postal, con su cantón y provincia</td></tr>
       <tr><td><code>/distritos.json</code><span class="tag">nuevo</span></td><td>Lista plana de todos los distritos con código postal</td></tr>
+      <tr><td><code>/gam.json</code><span class="tag">nuevo</span></td><td>Códigos postales dentro y fuera de la GAM, para tarifas de envío</td></tr>
       <tr><td><code>/todo.json</code><span class="tag">nuevo</span></td><td>Árbol completo con códigos oficiales y áreas en km²</td></tr>
       <tr><td><code>/meta.json</code><span class="tag">nuevo</span></td><td>Versión de la API, fuente, edición y totales</td></tr>
       <tr><td><code>/openapi.json</code></td><td>Especificación OpenAPI 3.1 de la API</td></tr>
@@ -135,7 +136,7 @@ const cantones = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json()
 // Distrito a partir del código postal
 const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
-//   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, ... }</code></pre>
+//   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, "gam": true, ... }</code></pre>
 
   <h2 id="codigo-postal">Cómo funciona el código postal de Costa Rica</h2>
   <p>El código postal de Costa Rica es el código oficial del distrito: <b>P</b> (provincia, 1 dígito) + <b>CC</b> (cantón, 2 dígitos) + <b>DD</b> (distrito, 2 dígitos). Por ejemplo, San Antonio de Desamparados es <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
@@ -150,6 +151,10 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
     <details>
       <summary>¿Cuál es el código postal de un distrito?</summary>
       <p>Es el código oficial del distrito, de 5 dígitos. Podés buscarlo arriba en el demo, o consultar <code>/codigo-postal/{código}.json</code> para obtener el distrito, cantón y provincia de un código postal.</p>
+    </details>
+    <details>
+      <summary>¿Qué códigos postales son de la GAM?</summary>
+      <p>Cada distrito trae el campo <code>gam</code>, y <code>/gam.json</code> tiene las dos listas completas: hoy son 167 distritos dentro de la Gran Área Metropolitana y 327 fuera. Se usa la definición oficial del Plan GAM 2013-2030 del MIVAH. Cuando el límite parte un distrito, cuenta como GAM si al menos la mitad de sus edificaciones quedan dentro. Algunas empresas de envío usan su propia lista; por ejemplo, Grecia no es GAM en la definición oficial.</p>
     </details>
     <details>
       <summary>¿La API es gratis? ¿Necesito una API key?</summary>

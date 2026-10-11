@@ -1,5 +1,5 @@
 {
- "version": "1.0.0",
+ "version": "1.1.0",
  "fuente": {
   "nombre": "División Territorial Administrativa 2026",
   "institucion": "Instituto Geográfico Nacional (IGN), Registro Nacional de Costa Rica",
@@ -15,6 +15,7 @@
  "totales": {
   "provincias": 7,
   "cantones": 84,
-  "distritos": 494
+  "distritos": 494,
+  "distritos_gam": 167
  }
 }
