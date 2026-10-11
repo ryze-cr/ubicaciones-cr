@@ -96,6 +96,7 @@
       <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Districts of a canton</td></tr>
       <tr><td><code>/codigo-postal/{PCCDD}.json</code><span class="tag">new</span></td><td>A district by postal code, with its canton and province</td></tr>
       <tr><td><code>/distritos.json</code><span class="tag">new</span></td><td>Flat list of every district with its postal code</td></tr>
+      <tr><td><code>/gam.json</code><span class="tag">new</span></td><td>Postal codes inside and outside the Greater Metropolitan Area (GAM), for shipping rates</td></tr>
       <tr><td><code>/todo.json</code><span class="tag">new</span></td><td>Full tree with official codes and areas in km²</td></tr>
       <tr><td><code>/meta.json</code><span class="tag">new</span></td><td>API version, source, edition and totals</td></tr>
       <tr><td><code>/openapi.json</code></td><td>OpenAPI 3.1 specification</td></tr>
@@ -112,7 +113,7 @@ const cantons = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json())
 // District from a postal code
 const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
-//   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, ... }</code></pre>
+//   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, "gam": true, ... }</code></pre>
 
   <h2 id="postal-codes">How Costa Rica postal codes work</h2>
   <p>A Costa Rican postal code is the official district code: <b>P</b> (province, 1 digit) + <b>CC</b> (canton, 2 digits) + <b>DD</b> (district, 2 digits). For example, San Antonio in Desamparados is <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
@@ -127,6 +128,10 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
     <details>
       <summary>What is the postal code of a district?</summary>
       <p>It is the district's official 5-digit code. You can look it up in the demo above, or request <code>/codigo-postal/{code}.json</code> to get the district, canton and province for a postal code.</p>
+    </details>
+    <details>
+      <summary>Which postal codes are in the GAM?</summary>
+      <p>Every district has a <code>gam</code> field, and <code>/gam.json</code> lists both groups: currently 167 districts inside the Greater Metropolitan Area (GAM) and 327 outside. It follows the official 2013-2030 GAM Plan by MIVAH. When the official boundary splits a district, it counts as GAM if at least half of its buildings are inside. Some shipping companies use their own list; for example, Grecia is not GAM under the official definition.</p>
     </details>
     <details>
       <summary>Is the API free? Do I need an API key?</summary>

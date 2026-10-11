@@ -4,7 +4,7 @@
     "title": "Ubicaciones de Costa Rica",
     "version": "DTA 2026",
     "summary": "Provincias, cantones, distritos y códigos postales de Costa Rica.",
-    "description": "API JSON pública, gratuita y de solo lectura basada en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN): 7 provincias, 84 cantones y 494 distritos. No requiere autenticación y tiene CORS abierto.\n\nEl código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2 dígitos) + distrito (2 dígitos). En las rutas, cantón y distrito van sin ceros a la izquierda. La numeración puede tener saltos porque los códigos de distritos que cambiaron de cantón se retiran. Un 404 significa que el código no existe, y su cuerpo es HTML, no JSON.",
+    "description": "API JSON pública, gratuita y de solo lectura basada en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN): 7 provincias, 84 cantones y 494 distritos. Cada distrito indica si pertenece a la Gran Área Metropolitana (GAM). No requiere autenticación y tiene CORS abierto.\n\nEl código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2 dígitos) + distrito (2 dígitos). En las rutas, cantón y distrito van sin ceros a la izquierda. La numeración puede tener saltos porque los códigos de distritos que cambiaron de cantón se retiran. Un 404 significa que el código no existe, y su cuerpo es HTML, no JSON.",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -162,7 +162,8 @@
                     "canton": 3,
                     "distrito": 5
                   },
-                  "area_km2": 2.1
+                  "area_km2": 2.1,
+                  "gam": true
                 }
               }
             }
@@ -206,6 +207,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArbolCompleto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gam.json": {
+      "get": {
+        "operationId": "listarCodigosGam",
+        "summary": "Códigos postales dentro y fuera de la Gran Área Metropolitana (GAM)",
+        "description": "Útil para tarifas de envío. Un distrito es GAM si el mapa oficial del Plan GAM 2013-2030 lo incluye; si el límite lo parte, cuenta como GAM cuando al menos la mitad de sus edificaciones quedan dentro.",
+        "responses": {
+          "200": {
+            "description": "Definición, criterio y las dos listas de códigos postales.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "definicion": {
+                      "type": "string"
+                    },
+                    "criterio": {
+                      "type": "string"
+                    },
+                    "gam": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[1-7][0-9]{4}$"
+                      }
+                    },
+                    "no_gam": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[1-7][0-9]{4}$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "definicion",
+                    "criterio",
+                    "gam",
+                    "no_gam"
+                  ]
                 }
               }
             }
@@ -327,6 +375,10 @@
               "null"
             ],
             "description": "Área en km². Es null cuando el IGN no la publica (hoy solo Duacarí, 70605)."
+          },
+          "gam": {
+            "type": "boolean",
+            "description": "true si el distrito pertenece a la Gran Área Metropolitana según el Plan GAM 2013-2030 (MIVAH). Ver /gam.json para el criterio."
           }
         },
         "required": [
@@ -335,7 +387,8 @@
           "canton",
           "provincia",
           "codigos",
-          "area_km2"
+          "area_km2",
+          "gam"
         ]
       },
       "Fuente": {
@@ -374,6 +427,10 @@
           },
           "distritos": {
             "type": "integer"
+          },
+          "distritos_gam": {
+            "type": "integer",
+            "description": "Distritos de la GAM (solo en /meta.json)."
           }
         }
       },
@@ -430,6 +487,10 @@
                                 "number",
                                 "null"
                               ]
+                            },
+                            "gam": {
+                              "type": "boolean",
+                              "description": "true si el distrito pertenece a la Gran Área Metropolitana según el Plan GAM 2013-2030 (MIVAH). Ver /gam.json para el criterio."
                             }
                           }
                         }

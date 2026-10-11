@@ -8,6 +8,8 @@ const TEXTOS = {
     elegirDistrito: 'Elegí un distrito',
     formatoCP: 'Son 5 dígitos y el primero va de 1 a 7.',
     cpNoExiste: 'Ese código postal no existe.',
+    enGam: 'GAM',
+    fueraGam: 'Fuera de la GAM',
     copiar: 'Copiar',
     copiado: 'Copiado',
   },
@@ -17,6 +19,8 @@ const TEXTOS = {
     elegirDistrito: 'Choose a district',
     formatoCP: 'Postal codes have 5 digits and start with 1 to 7.',
     cpNoExiste: 'That postal code does not exist.',
+    enGam: 'GAM',
+    fueraGam: 'Outside the GAM',
     copiar: 'Copy',
     copiado: 'Copied',
   },
@@ -101,7 +105,7 @@ $('in-cp').addEventListener('input', async (e) => {
     const boton = crear('button', { type: 'button', class: 'copiar' }, T.copiar);
     boton.addEventListener('click', () => copiar(boton, `${d.distrito}, ${d.canton}, ${d.provincia}`, out));
     out.replaceChildren(crear('span', { class: 'lugar-fila' }, lugar, boton),
-      crear('span', { class: 'lugar-ruta' }, `${d.canton} · ${d.provincia}`));
+      crear('span', { class: 'lugar-ruta' }, `${d.canton} · ${d.provincia} · ${d.gam ? T.enGam : T.fueraGam}`));
   } catch { out.textContent = T.cpNoExiste; }
 });
 $('form-cp').addEventListener('submit', (e) => e.preventDefault());

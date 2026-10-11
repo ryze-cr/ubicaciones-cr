@@ -53,6 +53,13 @@ for p in dta['provincias']:
         for d in c['distritos']:
             revisar(leer(f"codigo-postal/{d['codigo']}.json")['distrito'] == d['nombre'], f"codigo-postal/{d['codigo']}.json desactualizado")
 revisar(len(list((PUBLIC / 'codigo-postal').glob('*.json'))) == len(distritos), 'sobran archivos en codigo-postal/')
+clasificacion_gam = json.loads((RAIZ / 'data/gam.json').read_text(encoding='utf-8'))
+gam, no_gam = set(clasificacion_gam['gam']), set(clasificacion_gam['no_gam'])
+revisar(not gam & no_gam, f'distritos en gam y no_gam a la vez: {sorted(gam & no_gam)}')
+revisar(gam | no_gam == set(codigos), f'distritos sin clasificar en data/gam.json: {sorted(set(codigos) - gam - no_gam)}; '
+        f'sobran: {sorted((gam | no_gam) - set(codigos))}')
+revisar(all(leer(f'codigo-postal/{c}.json')['gam'] == (c in gam) for c in codigos), 'el campo gam de codigo-postal/ está desactualizado')
+revisar(leer('gam.json')['gam'] == clasificacion_gam['gam'], 'gam.json desactualizado')
 revisar(len(leer('distritos.json')) == len(distritos), 'distritos.json desactualizado')
 edicion = dta['fuente']['edicion']
 indice = (PUBLIC / 'index.html').read_text(encoding='utf-8')
