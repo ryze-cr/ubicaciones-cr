@@ -14,7 +14,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 PUBLIC = RAIZ / 'public'
 # Versión de la API (semver): mayor = cambios que rompen integraciones, menor = rutas o datos nuevos,
 # parche = correcciones. Se publica en /meta.json y en cada release de GitHub.
-VERSION = '1.1.0'
+VERSION = '1.1.1'
 GENERADOS = ['provincias.json', 'provincia', 'codigo-postal', 'todo.json', 'distritos.json', 'gam.json', 'meta.json']
 
 
