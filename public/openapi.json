@@ -2,9 +2,9 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Ubicaciones de Costa Rica",
-    "version": "DTA 2026",
+    "version": "1.1.0",
     "summary": "Provincias, cantones, distritos y códigos postales de Costa Rica.",
-    "description": "API JSON pública, gratuita y de solo lectura basada en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN): 7 provincias, 84 cantones y 494 distritos. Cada distrito indica si pertenece a la Gran Área Metropolitana (GAM). No requiere autenticación y tiene CORS abierto.\n\nEl código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2 dígitos) + distrito (2 dígitos). En las rutas, cantón y distrito van sin ceros a la izquierda. La numeración puede tener saltos porque los códigos de distritos que cambiaron de cantón se retiran. Un 404 significa que el código no existe, y su cuerpo es HTML, no JSON.",
+    "description": "API JSON pública, gratuita y de solo lectura basada en la División Territorial Administrativa 2026 (DTA 2026) del Instituto Geográfico Nacional (IGN): 7 provincias, 84 cantones y 494 distritos. Cada distrito indica si pertenece a la Gran Área Metropolitana (GAM). No requiere autenticación y tiene CORS abierto.\n\nEl código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2 dígitos) + distrito (2 dígitos). En las rutas, cantón y distrito van sin ceros a la izquierda. La numeración puede tener saltos porque los códigos de distritos que cambiaron de cantón se retiran. Un 404 significa que el código no existe, y su cuerpo es HTML, no JSON.",
     "license": {
       "name": "MIT",
       "identifier": "MIT"

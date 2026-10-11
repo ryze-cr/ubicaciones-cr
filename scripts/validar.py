@@ -72,7 +72,7 @@ guia = (PUBLIC / 'llms.txt').read_text(encoding='utf-8')
 revisar(f'DTA {edicion}' in guia and f'{len(distritos)} distritos' in guia,
         f'llms.txt no menciona la DTA {edicion} o los {len(distritos)} distritos')
 spec = json.loads((PUBLIC / 'openapi.json').read_text(encoding='utf-8'))
-revisar(spec['info']['version'] == f'DTA {edicion}', f'openapi.json no tiene la versión DTA {edicion}')
+revisar(f'DTA {edicion}' in spec['info']['description'], f'la descripción de openapi.json no menciona la DTA {edicion}')
 for ruta, op in spec['paths'].items():
     ejemplo = op['get']['responses']['200']['content']['application/json'].get('example')
     if ejemplo is None:
@@ -81,6 +81,17 @@ for ruta, op in spec['paths'].items():
     real = leer(ruta.lstrip('/').format(**params))
     esperado = real if isinstance(real, dict) and 'codigo_postal' in real else {k: real.get(k) for k in ejemplo}
     revisar(ejemplo == esperado, f'el ejemplo de {ruta} en openapi.json no coincide con los datos')
+meta = leer('meta.json')
+revisar(spec['info']['version'] == meta['version'], f"openapi.json dice versión {spec['info']['version']} y meta.json {meta['version']}")
+documentos = {'llms.txt': guia, 'README.md': (RAIZ / 'README.md').read_text(encoding='utf-8'),
+              'index.html': indice, 'en/index.html': ingles}
+nombres = {'{provincia}': '{p}', '{canton}': '{c}', '{codigoPostal}': '{PCCDD}'}
+for ruta in list(spec['paths']) + ['/openapi.json', '/llms.txt']:
+    for k, v in nombres.items():
+        ruta = ruta.replace(k, v)
+    for nombre, texto in documentos.items():
+        if nombre != 'llms.txt' or ruta != '/llms.txt':
+            revisar(ruta in texto, f'{nombre} no documenta la ruta {ruta}')
 revisar((PUBLIC / 'og.png').exists(), 'falta public/og.png (correr scripts/generar_imagen_og.py)')
 revisar((PUBLIC / '404.html').exists(), 'falta public/404.html (sin él, Cloudflare Pages responde 200 a rutas inexistentes)')
 

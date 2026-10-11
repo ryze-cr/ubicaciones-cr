@@ -8,6 +8,8 @@ Abrí un [issue](https://github.com/ryze-cr/ubicaciones-cr/issues/new) con:
 - Qué dice la API y qué debería decir.
 - La fuente oficial: la tabla de la DTA del IGN, una ley o un decreto publicado en La Gaceta.
 
+Si el error es sobre la GAM (un distrito marcado dentro o fuera por error), indicá el distrito y por qué; la clasificación y sus fuentes están en `data/gam.json`.
+
 Los datos siguen a la División Territorial Administrativa del IGN. Si hay una ley que crea o cambia un distrito y todavía no aparece en la DTA, también se puede agregar en `data/correcciones.json`, citando la ley.
 
 ## Proponer un cambio
