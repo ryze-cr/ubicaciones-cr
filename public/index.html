@@ -18,7 +18,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CR">
 <meta property="og:locale:alternate" content="en_US">
-<meta property="og:site_name" content="Ubicaciones de Costa Rica">
+<meta property="og:site_name" content="Flashout Labs">
 <meta property="og:title" content="API de códigos postales y distritos de Costa Rica">
 <meta property="og:description" content="Códigos postales, 7 provincias, 84 cantones y 494 distritos de Costa Rica en JSON. Datos oficiales del IGN (DTA 2026), gratis y sin API key.">
 <meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/">
@@ -34,9 +34,11 @@
   "@graph": [
     {
       "@type": "WebSite",
-      "name": "Ubicaciones de Costa Rica",
+      "name": "Flashout Labs",
+      "alternateName": ["Ubicaciones de Costa Rica", "ubicaciones-cr.ryze-cr.workers.dev"],
       "url": "https://ubicaciones-cr.ryze-cr.workers.dev/",
-      "inLanguage": "es-CR"
+      "inLanguage": "es-CR",
+      "publisher": { "@type": "Organization", "name": "Flashout Labs" }
     },
     {
       "@type": "Dataset",
@@ -50,6 +52,7 @@
       "license": "https://opensource.org/licenses/MIT",
       "keywords": ["Costa Rica", "provincias", "cantones", "distritos", "código postal", "GAM", "Gran Área Metropolitana", "división territorial administrativa", "IGN", "API", "JSON"],
       "creator": { "@type": "Person", "name": "Carl De Pass", "url": "https://github.com/ryze-cr" },
+      "publisher": { "@type": "Organization", "name": "Flashout Labs" },
       "isBasedOn": "https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf",
       "spatialCoverage": { "@type": "Place", "name": "Costa Rica" },
       "distribution": [
@@ -193,7 +196,7 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
   </div>
 
   <footer>
-    <p>Hecho gracias a <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>
+    <p>Un proyecto de Flashout Labs. Hecho gracias a <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>
     <p>Datos: Instituto Geográfico Nacional, Registro Nacional de Costa Rica. Inspirado en <a href="https://github.com/lfbvyo/ubicaciones" target="_blank" rel="noopener">lfbvyo/ubicaciones</a>.</p>
     <p>Código abierto bajo licencia MIT · <a href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">GitHub</a> · ¿Encontraste un error? <a href="https://github.com/ryze-cr/ubicaciones-cr/issues" target="_blank" rel="noopener">Abrí un issue</a>.</p>
   </footer>
