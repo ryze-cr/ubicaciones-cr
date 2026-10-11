@@ -95,12 +95,6 @@
 
   <section class="demo" aria-labelledby="demo-titulo">
     <h2 id="demo-titulo" style="margin-top:0">Probalo</h2>
-    <fieldset class="filtro-gam">
-      <legend>Zona</legend>
-      <label><input type="radio" name="zona" value="todas" checked> Todas</label>
-      <label><input type="radio" name="zona" value="gam"> GAM</label>
-      <label><input type="radio" name="zona" value="fuera"> Fuera de la GAM</label>
-    </fieldset>
     <div class="selects">
       <div><label for="sel-provincia">Provincia</label><select id="sel-provincia"><option value="">Cargando…</option></select></div>
       <div><label for="sel-canton">Cantón</label><select id="sel-canton" disabled><option value="">—</option></select></div>
@@ -112,6 +106,28 @@
       <input id="in-cp" inputmode="numeric" maxlength="5" pattern="[1-7][0-9]{4}" placeholder="10305" autocomplete="off">
       <output id="out-cp" for="in-cp"></output>
     </form>
+  </section>
+
+  <section aria-labelledby="distritos-gam">
+    <h2 id="distritos-gam">Distritos dentro y fuera de la GAM</h2>
+    <p class="explorar-lede">Los 494 distritos con su código postal y su zona, según la Gran Área Metropolitana del Plan GAM 2013-2030. Filtrá por zona o buscá por nombre o código.</p>
+    <div class="lista-controles">
+      <fieldset class="filtro-gam">
+        <legend>Zona</legend>
+        <label><input type="radio" name="zona" value="todas" checked> Todas</label>
+        <label><input type="radio" name="zona" value="gam"> GAM</label>
+        <label><input type="radio" name="zona" value="fuera"> Fuera de la GAM</label>
+      </fieldset>
+      <label class="sr-only" for="filtro-lista">Filtrar por distrito, cantón, provincia o código</label>
+      <input id="filtro-lista" type="search" autocomplete="off" placeholder="Filtrar por distrito, cantón o código…">
+    </div>
+    <p class="lista-total" id="lista-total" aria-live="polite"></p>
+    <div class="tabla-gam">
+      <table>
+        <thead><tr><th>Código postal</th><th>Distrito</th><th>Cantón</th><th>Provincia</th><th>Zona</th></tr></thead>
+        <tbody id="lista-gam"></tbody>
+      </table>
+    </div>
   </section>
 
   <h2 id="endpoints">Endpoints de la API</h2>
