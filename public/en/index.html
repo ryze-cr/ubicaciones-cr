@@ -17,7 +17,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="es_CR">
-<meta property="og:site_name" content="Costa Rica Locations API">
+<meta property="og:site_name" content="Flashout Labs">
 <meta property="og:title" content="Costa Rica Postal Codes and Districts API">
 <meta property="og:description" content="Costa Rica postal codes, 7 provinces, 84 cantons and 494 districts as JSON. Official IGN data (DTA 2026), free and with no API key.">
 <meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
@@ -34,7 +34,8 @@
   "name": "Costa Rica Postal Codes and Districts API",
   "url": "https://ubicaciones-cr.ryze-cr.workers.dev/en/",
   "inLanguage": "en",
-  "isPartOf": { "@type": "WebSite", "name": "Ubicaciones de Costa Rica", "url": "https://ubicaciones-cr.ryze-cr.workers.dev/" }
+  "isPartOf": { "@type": "WebSite", "name": "Flashout Labs", "alternateName": "Ubicaciones de Costa Rica", "url": "https://ubicaciones-cr.ryze-cr.workers.dev/" },
+  "publisher": { "@type": "Organization", "name": "Flashout Labs" }
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -170,7 +171,7 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
   </div>
 
   <footer>
-    <p>Made by <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>
+    <p>A Flashout Labs project. Made by <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>
     <p>Data: National Geographic Institute (IGN), National Registry of Costa Rica. Inspired by <a href="https://github.com/lfbvyo/ubicaciones" target="_blank" rel="noopener">lfbvyo/ubicaciones</a>.</p>
     <p>Open source under the MIT license · <a href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">GitHub</a> · Found an error? <a href="https://github.com/ryze-cr/ubicaciones-cr/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
   </footer>
