@@ -1,5 +1,7 @@
 # Ubicaciones de Costa Rica
 
+Un proyecto de **Flashout Labs**.
+
 API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica, según la **División Territorial Administrativa 2026** del Instituto Geográfico Nacional (IGN).
 
 **URL:** https://ubicaciones-cr.ryze-cr.workers.dev
@@ -44,7 +46,7 @@ Abrí un [issue](https://github.com/ryze-cr/ubicaciones-cr/issues/new/choose) co
 
 ## Créditos y licencia
 
-- Hecho gracias a [Carl De Pass](https://github.com/ryze-cr).
+- Un proyecto de **Flashout Labs**, hecho gracias a [Carl De Pass](https://github.com/ryze-cr).
 - Datos: [Instituto Geográfico Nacional](https://www.snitcr.go.cr), Registro Nacional de Costa Rica.
 - Inspirado en [lfbvyo/ubicaciones](https://github.com/lfbvyo/ubicaciones), de Luis Felipe Barnett Vásquez.
 - Código bajo licencia [MIT](LICENSE).
