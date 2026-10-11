@@ -1,6 +1,6 @@
 # Ubicaciones de Costa Rica
 
-> API JSON pública y gratuita con las 7 provincias, 84 cantones y 494 distritos de Costa Rica, y sus códigos postales, según la División Territorial Administrativa (DTA 2026) del Instituto Geográfico Nacional (IGN). Solo lectura, sin autenticación, con CORS abierto. Todas las rutas son `GET` a archivos estáticos.
+> API JSON pública y gratuita con las 7 provincias, 84 cantones y 494 distritos de Costa Rica, y sus códigos postales, según la División Territorial Administrativa (DTA 2026) del Instituto Geográfico Nacional (IGN). Cada distrito indica si pertenece a la Gran Área Metropolitana (GAM). Solo lectura, sin autenticación, con CORS abierto. Todas las rutas son `GET` a archivos estáticos.
 
 Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 
@@ -13,7 +13,7 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 - **Un 404 significa que ese código no existe** en la división territorial vigente. La respuesta 404 es HTML, no JSON: revisá el estado HTTP antes de parsear.
 - **Los nombres son los oficiales del IGN**, con tildes. El cantón 1 de cada provincia se llama como la provincia (por ejemplo, "San José"), no "Central".
 - **Para muchas consultas, descargá `/distritos.json` o `/todo.json` una vez** y trabajá en memoria en lugar de hacer cientos de peticiones. Las respuestas se pueden cachear una hora.
-- **Para saber la edición vigente de los datos**, consultá `/meta.json`.
+- **Para saber la versión de la API y la edición vigente de los datos**, consultá `/meta.json`. La API usa versionado semántico: un cambio de versión mayor puede romper integraciones; los menores solo agregan datos o rutas.
 
 ## Endpoints
 
@@ -24,7 +24,7 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
   `{"codigo_postal":"10305","distrito":"San Antonio","canton":"Desamparados","provincia":"San José","codigos":{"provincia":1,"canton":3,"distrito":5},"area_km2":2.1,"gam":true}`
 - [/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/distritos.json): arreglo con los 494 distritos, cada uno con la misma forma que `/codigo-postal/{PCCDD}.json`. Es la mejor opción para buscar por nombre.
 - [/gam.json](https://ubicaciones-cr.ryze-cr.workers.dev/gam.json): las dos listas de códigos postales, `gam` y `no_gam`, con la definición y el criterio usados.
-- [/todo.json](https://ubicaciones-cr.ryze-cr.workers.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`.
+- [/todo.json](https://ubicaciones-cr.ryze-cr.workers.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`; cada distrito trae además `gam`.
 - [/meta.json](https://ubicaciones-cr.ryze-cr.workers.dev/meta.json): versión de la API (semver), fuente, edición y totales.
 - [/openapi.json](https://ubicaciones-cr.ryze-cr.workers.dev/openapi.json): especificación OpenAPI 3.1 de todas las rutas.
 

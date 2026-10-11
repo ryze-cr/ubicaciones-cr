@@ -41,14 +41,14 @@
     {
       "@type": "Dataset",
       "name": "Códigos postales, provincias, cantones y distritos de Costa Rica (DTA 2026)",
-      "description": "División territorial administrativa de Costa Rica en formato JSON: 7 provincias, 84 cantones y 494 distritos, con el código oficial de cada distrito, que es también su código postal, y el área en km². Basado en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN).",
+      "description": "División territorial administrativa de Costa Rica en formato JSON: 7 provincias, 84 cantones y 494 distritos, con el código oficial de cada distrito, que es también su código postal, el área en km² y si pertenece a la Gran Área Metropolitana (GAM). Basado en la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN).",
       "url": "https://ubicaciones-cr.ryze-cr.workers.dev/",
       "sameAs": "https://github.com/ryze-cr/ubicaciones-cr",
       "version": "DTA 2026",
       "inLanguage": "es",
       "isAccessibleForFree": true,
       "license": "https://opensource.org/licenses/MIT",
-      "keywords": ["Costa Rica", "provincias", "cantones", "distritos", "código postal", "división territorial administrativa", "IGN", "API", "JSON"],
+      "keywords": ["Costa Rica", "provincias", "cantones", "distritos", "código postal", "GAM", "Gran Área Metropolitana", "división territorial administrativa", "IGN", "API", "JSON"],
       "creator": { "@type": "Person", "name": "Carl De Pass", "url": "https://github.com/ryze-cr" },
       "isBasedOn": "https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf",
       "spatialCoverage": { "@type": "Place", "name": "Costa Rica" },
@@ -176,7 +176,7 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
     </details>
     <details>
       <summary>¿Qué códigos postales son de la GAM?</summary>
-      <p>Cada distrito trae el campo <code>gam</code>, y <code>/gam.json</code> tiene las dos listas completas: hoy son 167 distritos dentro de la Gran Área Metropolitana y 327 fuera. Se usa la definición oficial del Plan GAM 2013-2030 del MIVAH. Cuando el límite parte un distrito, cuenta como GAM si al menos la mitad de sus edificaciones quedan dentro. Algunas empresas de envío usan su propia lista; por ejemplo, Grecia no es GAM en la definición oficial.</p>
+      <p>Cada distrito trae el campo <code>gam</code>, <code>/gam.json</code> tiene las dos listas completas y podés consultarlas en la <a href="#distritos-gam">lista de distritos</a>: hoy son 167 distritos dentro de la Gran Área Metropolitana y 327 fuera. Se usa la definición oficial del Plan GAM 2013-2030 del MIVAH. Cuando el límite parte un distrito, cuenta como GAM si al menos la mitad de sus edificaciones quedan dentro. Algunas empresas de envío usan su propia lista; por ejemplo, Grecia no es GAM en la definición oficial.</p>
     </details>
     <details>
       <summary>¿La API es gratis? ¿Necesito una API key?</summary>
