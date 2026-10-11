@@ -95,12 +95,18 @@
 
   <section class="demo" aria-labelledby="demo-titulo">
     <h2 id="demo-titulo" style="margin-top:0">Probalo</h2>
+    <fieldset class="filtro-gam">
+      <legend>Zona</legend>
+      <label><input type="radio" name="zona" value="todas" checked> Todas</label>
+      <label><input type="radio" name="zona" value="gam"> GAM</label>
+      <label><input type="radio" name="zona" value="fuera"> Fuera de la GAM</label>
+    </fieldset>
     <div class="selects">
       <div><label for="sel-provincia">Provincia</label><select id="sel-provincia"><option value="">Cargando…</option></select></div>
       <div><label for="sel-canton">Cantón</label><select id="sel-canton" disabled><option value="">—</option></select></div>
       <div><label for="sel-distrito">Distrito</label><select id="sel-distrito" disabled><option value="">—</option></select></div>
     </div>
-    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><button type="button" class="copiar" id="copiar-cp" hidden>Copiar</button><small id="cp-ruta"></small></div>
+    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><span class="etiqueta-gam" id="cp-gam" hidden></span><button type="button" class="copiar" id="copiar-cp" hidden>Copiar</button><small id="cp-ruta"></small></div>
     <form class="lookup" id="form-cp">
       <label for="in-cp" style="flex-basis:100%;margin:0">Buscar por código postal</label>
       <input id="in-cp" inputmode="numeric" maxlength="5" pattern="[1-7][0-9]{4}" placeholder="10305" autocomplete="off">
