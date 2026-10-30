@@ -9,10 +9,10 @@ Genera data/dta.json aplicando las correcciones documentadas en data/correccione
 Para actualizar a una nueva edición del IGN (sale cada dos años en snitcr.go.cr):
     1. python scripts/extraer_dta.py <PDF nuevo> --edicion <año> --url <url del PDF>
     2. python scripts/generar_api.py
-    3. python scripts/generar_imagen_og.py
+    3. python scripts/generar_paginas.py (páginas por distrito, buscador y sitemap) y scripts/generar_imagen_og.py
     4. Clasificar en data/gam.json (listas gam o no_gam) los distritos nuevos; validar.py avisa cuáles faltan
     5. Actualizar la edición y los totales en public/index.html, public/en/index.html, public/llms.txt y
-       public/openapi.json, y la fecha en public/sitemap.xml
+       public/openapi.json, y la fecha ACTUALIZADO en scripts/generar_paginas.py
     6. Subir VERSION en scripts/generar_api.py (menor si solo agrega datos) y el mismo número en public/openapi.json
     7. python scripts/validar.py; después del merge, crear el release en GitHub con esa versión
 Si una corrección ya no aplica (por ejemplo, el IGN agregó Duacarí a la tabla), el script

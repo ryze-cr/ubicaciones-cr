@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Costa Rica Postal Codes and Districts API</title>
-<meta name="description" content="Free JSON API with Costa Rica postal codes, 7 provinces, 84 cantons and 494 districts, based on official IGN data (DTA 2026). No API key.">
+<title>Costa Rica ZIP Codes and Postal Codes by District</title>
+<meta name="description" content="Find the postal code (ZIP code) of any district in Costa Rica. All 494 districts, 84 cantons and 7 provinces with official IGN data (DTA 2026).">
 <link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
 <link rel="alternate" hreflang="es" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="alternate" hreflang="en" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
@@ -18,8 +18,8 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="es_CR">
 <meta property="og:site_name" content="Flashout Labs">
-<meta property="og:title" content="Costa Rica Postal Codes and Districts API">
-<meta property="og:description" content="Costa Rica postal codes, 7 provinces, 84 cantons and 494 districts as JSON. Official IGN data (DTA 2026), free and with no API key.">
+<meta property="og:title" content="Costa Rica ZIP Codes and Postal Codes by District">
+<meta property="og:description" content="The postal code of all 494 districts in Costa Rica, by province and canton. Official IGN data (DTA 2026), free and with an API.">
 <meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
 <meta property="og:image" content="https://ubicaciones-cr.ryze-cr.workers.dev/og.png">
 <meta property="og:image:width" content="1200">
@@ -31,7 +31,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Costa Rica Postal Codes and Districts API",
+  "name": "Costa Rica ZIP Codes and Postal Codes by District",
   "url": "https://ubicaciones-cr.ryze-cr.workers.dev/en/",
   "inLanguage": "en",
   "isPartOf": { "@type": "WebSite", "name": "Flashout Labs", "alternateName": "Ubicaciones de Costa Rica", "url": "https://ubicaciones-cr.ryze-cr.workers.dev/" },
@@ -45,45 +45,67 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <header class="inicio">
     <nav class="idiomas" aria-label="Idioma / Language">
       <a href="/" lang="es" hreflang="es">Español</a>
       <a href="/en/" lang="en" hreflang="en" aria-current="page">English</a>
     </nav>
-    <h1>Costa Rica postal codes and districts API</h1>
-    <p class="lede">Free JSON API with Costa Rica's provinces, cantons, districts and postal codes. Static files, open CORS and no API key.</p>
-    <div class="acciones">
-      <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
-        View on GitHub
-      </a>
-    </div>
-    <div class="stats" aria-live="polite">
-      <div class="stat"><b id="n-provincias">7</b><span>provinces</span></div>
-      <div class="stat"><b id="n-cantones">84</b><span>cantons</span></div>
-      <div class="stat"><b id="n-distritos">494</b><span>districts</span></div>
-    </div>
-    <p class="source">Source: <a id="fuente" href="https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf">Administrative Territorial Division (DTA 2026)</a>, National Geographic Institute of Costa Rica (IGN).</p>
+    <h1>Costa Rica postal codes (ZIP codes)</h1>
+    <p class="lede">Find the postal code of any district by name or number. Official IGN data for all 7 provinces, 84 cantons and 494 districts.</p>
+    <form class="buscador" role="search" id="form-buscador">
+      <label class="sr-only" for="buscador">Search a district, canton or postal code</label>
+      <input id="buscador" type="search" autocomplete="off" spellcheck="false" placeholder="e.g. San Antonio de Desamparados, Escazú or 10305" aria-describedby="buscador-ayuda">
+    </form>
+    <p class="ayuda" id="buscador-ayuda">Type a district or canton name, or a 5-digit postal code.</p>
+    <ul class="resultados" id="resultados" aria-live="polite"></ul>
   </header>
 
-  <div class="intro-demo">
-    <h2 id="explorar-titulo">Browse locations</h2>
-    <p class="explorar-lede">Choose a province, a canton and a district to see its postal code, or type a code to find out which district it belongs to.</p>
-  </div>
-
   <section class="demo" aria-labelledby="demo-titulo">
-    <h2 id="demo-titulo" style="margin-top:0">Try it</h2>
+    <h2 id="demo-titulo" style="margin-top:0">Find by province, canton and district</h2>
     <div class="selects">
       <div><label for="sel-provincia">Province</label><select id="sel-provincia"><option value="">Loading…</option></select></div>
       <div><label for="sel-canton">Canton</label><select id="sel-canton" disabled><option value="">—</option></select></div>
       <div><label for="sel-distrito">District</label><select id="sel-distrito" disabled><option value="">—</option></select></div>
     </div>
-    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><span class="etiqueta-gam" id="cp-gam" hidden></span><button type="button" class="copiar" id="copiar-cp" hidden>Copy</button><small id="cp-ruta"></small></div>
-    <form class="lookup" id="form-cp">
-      <label for="in-cp" style="flex-basis:100%;margin:0">Look up a postal code</label>
-      <input id="in-cp" inputmode="numeric" maxlength="5" pattern="[1-7][0-9]{4}" placeholder="10305" autocomplete="off">
-      <output id="out-cp" for="in-cp"></output>
-    </form>
+    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><span class="etiqueta-gam" id="cp-gam" hidden></span><button type="button" class="copiar" id="copiar-cp" hidden>Copy</button><a id="cp-enlace" hidden></a></div>
+  </section>
+
+  <section aria-labelledby="provincias-titulo">
+    <h2 id="provincias-titulo">Provinces and cantons of Costa Rica</h2>
+    <p class="explorar-lede">Choose a province or canton to see the postal codes of all its districts.</p>
+    <!-- provincias:inicio -->
+    <div class="provincias">
+      <div class="provincia">
+        <h3><a href="/en/san-jose/">San José</a> <code>1</code></h3>
+        <p><a href="/en/san-jose/san-jose/">San José</a> · <a href="/en/san-jose/escazu/">Escazú</a> · <a href="/en/san-jose/desamparados/">Desamparados</a> · <a href="/en/san-jose/puriscal/">Puriscal</a> · <a href="/en/san-jose/tarrazu/">Tarrazú</a> · <a href="/en/san-jose/aserri/">Aserrí</a> · <a href="/en/san-jose/mora/">Mora</a> · <a href="/en/san-jose/goicoechea/">Goicoechea</a> · <a href="/en/san-jose/santa-ana/">Santa Ana</a> · <a href="/en/san-jose/alajuelita/">Alajuelita</a> · <a href="/en/san-jose/vazquez-de-coronado/">Vázquez de Coronado</a> · <a href="/en/san-jose/acosta/">Acosta</a> · <a href="/en/san-jose/tibas/">Tibás</a> · <a href="/en/san-jose/moravia/">Moravia</a> · <a href="/en/san-jose/montes-de-oca/">Montes de Oca</a> · <a href="/en/san-jose/turrubares/">Turrubares</a> · <a href="/en/san-jose/dota/">Dota</a> · <a href="/en/san-jose/curridabat/">Curridabat</a> · <a href="/en/san-jose/perez-zeledon/">Pérez Zeledón</a> · <a href="/en/san-jose/leon-cortes-castro/">León Cortés Castro</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/en/alajuela/">Alajuela</a> <code>2</code></h3>
+        <p><a href="/en/alajuela/alajuela/">Alajuela</a> · <a href="/en/alajuela/san-ramon/">San Ramón</a> · <a href="/en/alajuela/grecia/">Grecia</a> · <a href="/en/alajuela/san-mateo/">San Mateo</a> · <a href="/en/alajuela/atenas/">Atenas</a> · <a href="/en/alajuela/naranjo/">Naranjo</a> · <a href="/en/alajuela/palmares/">Palmares</a> · <a href="/en/alajuela/poas/">Poás</a> · <a href="/en/alajuela/orotina/">Orotina</a> · <a href="/en/alajuela/san-carlos/">San Carlos</a> · <a href="/en/alajuela/zarcero/">Zarcero</a> · <a href="/en/alajuela/sarchi/">Sarchí</a> · <a href="/en/alajuela/upala/">Upala</a> · <a href="/en/alajuela/los-chiles/">Los Chiles</a> · <a href="/en/alajuela/guatuso/">Guatuso</a> · <a href="/en/alajuela/rio-cuarto/">Río Cuarto</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/en/cartago/">Cartago</a> <code>3</code></h3>
+        <p><a href="/en/cartago/cartago/">Cartago</a> · <a href="/en/cartago/paraiso/">Paraíso</a> · <a href="/en/cartago/la-union/">La Unión</a> · <a href="/en/cartago/jimenez/">Jiménez</a> · <a href="/en/cartago/turrialba/">Turrialba</a> · <a href="/en/cartago/alvarado/">Alvarado</a> · <a href="/en/cartago/oreamuno/">Oreamuno</a> · <a href="/en/cartago/el-guarco/">El Guarco</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/en/heredia/">Heredia</a> <code>4</code></h3>
+        <p><a href="/en/heredia/heredia/">Heredia</a> · <a href="/en/heredia/barva/">Barva</a> · <a href="/en/heredia/santo-domingo/">Santo Domingo</a> · <a href="/en/heredia/santa-barbara/">Santa Bárbara</a> · <a href="/en/heredia/san-rafael/">San Rafael</a> · <a href="/en/heredia/san-isidro/">San Isidro</a> · <a href="/en/heredia/belen/">Belén</a> · <a href="/en/heredia/flores/">Flores</a> · <a href="/en/heredia/san-pablo/">San Pablo</a> · <a href="/en/heredia/sarapiqui/">Sarapiquí</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/en/guanacaste/">Guanacaste</a> <code>5</code></h3>
+        <p><a href="/en/guanacaste/liberia/">Liberia</a> · <a href="/en/guanacaste/nicoya/">Nicoya</a> · <a href="/en/guanacaste/santa-cruz/">Santa Cruz</a> · <a href="/en/guanacaste/bagaces/">Bagaces</a> · <a href="/en/guanacaste/carrillo/">Carrillo</a> · <a href="/en/guanacaste/canas/">Cañas</a> · <a href="/en/guanacaste/abangares/">Abangares</a> · <a href="/en/guanacaste/tilaran/">Tilarán</a> · <a href="/en/guanacaste/nandayure/">Nandayure</a> · <a href="/en/guanacaste/la-cruz/">La Cruz</a> · <a href="/en/guanacaste/hojancha/">Hojancha</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/en/puntarenas/">Puntarenas</a> <code>6</code></h3>
+        <p><a href="/en/puntarenas/puntarenas/">Puntarenas</a> · <a href="/en/puntarenas/esparza/">Esparza</a> · <a href="/en/puntarenas/buenos-aires/">Buenos Aires</a> · <a href="/en/puntarenas/montes-de-oro/">Montes de Oro</a> · <a href="/en/puntarenas/osa/">Osa</a> · <a href="/en/puntarenas/quepos/">Quepos</a> · <a href="/en/puntarenas/golfito/">Golfito</a> · <a href="/en/puntarenas/coto-brus/">Coto Brus</a> · <a href="/en/puntarenas/parrita/">Parrita</a> · <a href="/en/puntarenas/corredores/">Corredores</a> · <a href="/en/puntarenas/garabito/">Garabito</a> · <a href="/en/puntarenas/monteverde/">Monteverde</a> · <a href="/en/puntarenas/puerto-jimenez/">Puerto Jiménez</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/en/limon/">Limón</a> <code>7</code></h3>
+        <p><a href="/en/limon/limon/">Limón</a> · <a href="/en/limon/pococi/">Pococí</a> · <a href="/en/limon/siquirres/">Siquirres</a> · <a href="/en/limon/talamanca/">Talamanca</a> · <a href="/en/limon/matina/">Matina</a> · <a href="/en/limon/guacimo/">Guácimo</a></p>
+      </div>
+    </div>
+    <p class="ver-listas"><a href="/en/cantons-of-costa-rica/">See all 84 cantons</a> · <a href="/en/districts-of-costa-rica/">See all 494 districts</a></p>
+    <!-- provincias:fin -->
   </section>
 
   <section aria-labelledby="gam-districts">
@@ -108,28 +130,72 @@
     </div>
   </section>
 
-  <h2 id="endpoints">API endpoints</h2>
-  <p>All endpoints answer <code>GET</code> with JSON. Canton and district numbers have no leading zeros. Names and field names are in Spanish, as published by the IGN.</p>
-  <div class="table-scroll">
-  <table>
-    <thead><tr><th>Path</th><th>Returns</th></tr></thead>
-    <tbody>
-      <tr><td><code>/provincias.json</code></td><td>The 7 provinces</td></tr>
-      <tr><td><code>/provincia/{p}/cantones.json</code></td><td>Cantons of a province</td></tr>
-      <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Districts of a canton</td></tr>
-      <tr><td><code>/codigo-postal/{PCCDD}.json</code><span class="tag">new</span></td><td>A district by postal code, with its canton and province</td></tr>
-      <tr><td><code>/distritos.json</code><span class="tag">new</span></td><td>Flat list of every district with its postal code</td></tr>
-      <tr><td><code>/gam.json</code><span class="tag">new</span></td><td>Postal codes inside and outside the Greater Metropolitan Area (GAM), for shipping rates</td></tr>
-      <tr><td><code>/todo.json</code><span class="tag">new</span></td><td>Full tree with official codes and areas in km²</td></tr>
-      <tr><td><code>/meta.json</code><span class="tag">new</span></td><td>API version, source, edition and totals</td></tr>
-      <tr><td><code>/openapi.json</code></td><td>OpenAPI 3.1 specification</td></tr>
-      <tr><td><code>/llms.txt</code></td><td>Usage guide for AI agents (in Spanish)</td></tr>
-    </tbody>
-  </table>
+  <h2 id="postal-codes">How Costa Rica postal codes work</h2>
+  <p>Costa Rica does not have a single ZIP code: <b>every district has its own</b> 5-digit postal code. It is the district's official code: <b>P</b> (province, 1 digit) + <b>CC</b> (canton, 2 digits) + <b>DD</b> (district, 2 digits). For example, San Antonio in Desamparados is <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
+  <p>Each province's codes start with its number: San José <code>1</code>, Alajuela <code>2</code>, Cartago <code>3</code>, Heredia <code>4</code>, Guanacaste <code>5</code>, Puntarenas <code>6</code> and Limón <code>7</code>. When a district moves to another canton, its old code is retired and never reused, so numbering can have gaps (for example, Grecia has no district 6).</p>
+
+  <h2 id="faq">Frequently asked questions</h2>
+  <div class="faq">
+    <details>
+      <summary>What is the ZIP code of Costa Rica?</summary>
+      <p>There isn't just one: each of the 494 districts has its own 5-digit postal code. For example, downtown San José (Carmen district) is <code>10101</code>, downtown Alajuela is <code>20101</code>, Cartago (Oriental) is <code>30101</code> and downtown Heredia is <code>40101</code>. Use the search box above to find yours.</p>
+    </details>
+    <details>
+      <summary>What do I enter as "ZIP code" when shopping online?</summary>
+      <p>Your district's 5-digit postal code. International forms call it "ZIP code" or "postal code"; in Costa Rica it is the same number.</p>
+    </details>
+    <details>
+      <summary>How many provinces, cantons and districts does Costa Rica have?</summary>
+      <p>According to the IGN's 2026 Administrative Territorial Division, Costa Rica has <b>7 provinces, 84 cantons and 494 districts</b>. The newest cantons are Monteverde and Puerto Jiménez, in Puntarenas. The newest districts are Pijije (Bagaces) and Cabagra (Buenos Aires), created by law in May 2025.</p>
+    </details>
+    <details>
+      <summary>Which postal codes are in the GAM?</summary>
+      <p>Currently 167 districts are inside the Greater Metropolitan Area (GAM) and 327 are outside; see the <a href="#gam-districts">district list</a>. It follows the official 2013-2030 GAM Plan by MIVAH. When the official boundary splits a district, it counts as GAM if at least half of its buildings are inside. Some shipping companies use their own list; for example, Grecia is not GAM under the official definition.</p>
+    </details>
+    <details>
+      <summary>Where does the data come from?</summary>
+      <p>From the 2026 Administrative Territorial Division (DTA 2026) published by the National Geographic Institute (IGN), the official division into provinces, cantons and districts. The postal code is each district's official code.</p>
+    </details>
   </div>
 
-  <h2 id="examples">Usage examples</h2>
-  <pre><code>// Cantons of San José
+  <section id="api" class="api" aria-labelledby="api-titulo">
+    <h2 id="api-titulo">Free postal code API for developers</h2>
+    <p class="explorar-lede">All of this data is available as a free JSON API: static files, open CORS and no API key. Names and field names are in Spanish, as published by the IGN.</p>
+    <div class="acciones">
+      <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="n-provincias">7</b><span>provinces</span></div>
+      <div class="stat"><b id="n-cantones">84</b><span>cantons</span></div>
+      <div class="stat"><b id="n-distritos">494</b><span>districts</span></div>
+    </div>
+    <p class="source">Source: <a id="fuente" href="https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf">Administrative Territorial Division (DTA 2026)</a>, National Geographic Institute of Costa Rica (IGN).</p>
+
+    <h3 id="endpoints">API endpoints</h3>
+    <p>All endpoints answer <code>GET</code> with JSON. Canton and district numbers have no leading zeros.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Path</th><th>Returns</th></tr></thead>
+      <tbody>
+        <tr><td><code>/provincias.json</code></td><td>The 7 provinces</td></tr>
+        <tr><td><code>/provincia/{p}/cantones.json</code></td><td>Cantons of a province</td></tr>
+        <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Districts of a canton</td></tr>
+        <tr><td><code>/codigo-postal/{PCCDD}.json</code></td><td>A district by postal code, with its canton and province</td></tr>
+        <tr><td><code>/distritos.json</code></td><td>Flat list of every district with its postal code</td></tr>
+        <tr><td><code>/gam.json</code></td><td>Postal codes inside and outside the Greater Metropolitan Area (GAM), for shipping rates</td></tr>
+        <tr><td><code>/todo.json</code></td><td>Full tree with official codes and areas in km²</td></tr>
+        <tr><td><code>/meta.json</code></td><td>API version, source, edition and totals</td></tr>
+        <tr><td><code>/openapi.json</code></td><td>OpenAPI 3.1 specification</td></tr>
+        <tr><td><code>/llms.txt</code></td><td>Usage guide for AI agents (in Spanish)</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3 id="examples">Usage examples</h3>
+    <pre><code>// Cantons of San José
 const cantons = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json());
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
 
@@ -138,37 +204,22 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
 //   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, "gam": true, ... }</code></pre>
 
-  <h2 id="postal-codes">How Costa Rica postal codes work</h2>
-  <p>A Costa Rican postal code is the official district code: <b>P</b> (province, 1 digit) + <b>CC</b> (canton, 2 digits) + <b>DD</b> (district, 2 digits). For example, San Antonio in Desamparados is <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
-  <p>When a district moves to another canton, its old code is retired and never reused, so numbering can have gaps (for example, Grecia has no district 6).</p>
-
-  <h2 id="faq">Frequently asked questions</h2>
-  <div class="faq">
-    <details>
-      <summary>How many provinces, cantons and districts does Costa Rica have?</summary>
-      <p>According to the IGN's 2026 Administrative Territorial Division, Costa Rica has <b>7 provinces, 84 cantons and 494 districts</b>. The newest cantons are Monteverde and Puerto Jiménez, in Puntarenas. The newest districts are Pijije (Bagaces) and Cabagra (Buenos Aires), created by law in May 2025.</p>
-    </details>
-    <details>
-      <summary>What is the postal code of a district?</summary>
-      <p>It is the district's official 5-digit code. You can look it up in the demo above, or request <code>/codigo-postal/{code}.json</code> to get the district, canton and province for a postal code.</p>
-    </details>
-    <details>
-      <summary>Which postal codes are in the GAM?</summary>
-      <p>Every district has a <code>gam</code> field, <code>/gam.json</code> lists both groups, and you can browse them in the <a href="#gam-districts">district list</a>: currently 167 districts inside the Greater Metropolitan Area (GAM) and 327 outside. It follows the official 2013-2030 GAM Plan by MIVAH. When the official boundary splits a district, it counts as GAM if at least half of its buildings are inside. Some shipping companies use their own list; for example, Grecia is not GAM under the official definition.</p>
-    </details>
-    <details>
-      <summary>Is the API free? Do I need an API key?</summary>
-      <p>It is free and needs no API key or sign-up. CORS is open, so you can call it directly from a browser, a mobile app or a server.</p>
-    </details>
-    <details>
-      <summary>How often is the data updated?</summary>
-      <p>Whenever the National Geographic Institute publishes a new edition of the Administrative Territorial Division, every two years, or when a law creates a new canton or district. <code>/meta.json</code> shows the current edition.</p>
-    </details>
-    <details>
-      <summary>Why are the names in Spanish?</summary>
-      <p>Province, canton and district names are proper nouns and are kept exactly as the IGN publishes them. JSON field names are also in Spanish (<code>provincia</code>, <code>canton</code>, <code>distrito</code>, <code>codigo_postal</code>) so the API stays compatible with existing integrations.</p>
-    </details>
-  </div>
+    <h3>API questions</h3>
+    <div class="faq">
+      <details>
+        <summary>Is the API free? Do I need an API key?</summary>
+        <p>It is free and needs no API key or sign-up. CORS is open, so you can call it directly from a browser, a mobile app or a server.</p>
+      </details>
+      <details>
+        <summary>How often is the data updated?</summary>
+        <p>Whenever the National Geographic Institute publishes a new edition of the Administrative Territorial Division, every two years, or when a law creates a new canton or district. <code>/meta.json</code> shows the current edition.</p>
+      </details>
+      <details>
+        <summary>Why are the names in Spanish?</summary>
+        <p>Province, canton and district names are proper nouns and are kept exactly as the IGN publishes them. JSON field names are also in Spanish (<code>provincia</code>, <code>canton</code>, <code>distrito</code>, <code>codigo_postal</code>) so the API stays compatible with existing integrations.</p>
+      </details>
+    </div>
+  </section>
 
   <footer>
     <p>A Flashout Labs project. Made by <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>

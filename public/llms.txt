@@ -45,4 +45,4 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 ## Opcional
 
 - [Repositorio en GitHub](https://github.com/ryze-cr/ubicaciones-cr): código fuente y reportes de errores en los datos.
-- [Documentación para personas](https://ubicaciones-cr.ryze-cr.workers.dev/)
+- [Buscador de códigos postales para personas](https://ubicaciones-cr.ryze-cr.workers.dev/): hay una página HTML por provincia, cantón y distrito, en español (`/{provincia}/{canton}/{distrito}/`, por ejemplo `/san-jose/desamparados/san-antonio/`) y en inglés (`/en/...`). Para consultas automáticas, usá los endpoints JSON.
