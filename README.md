@@ -8,6 +8,8 @@ API JSON gratuita con las provincias, cantones, distritos y códigos postales de
 
 **English:** https://ubicaciones-cr.ryze-cr.workers.dev/en/
 
+Además de la API, el sitio es un buscador de códigos postales con una página por provincia, cantón y distrito (por ejemplo, [San Antonio de Desamparados](https://ubicaciones-cr.ryze-cr.workers.dev/san-jose/desamparados/san-antonio/)).
+
 - **7 provincias, 84 cantones y 494 distritos**
 - Sin API key, sin registro y con CORS abierto
 - El código postal es el código oficial del distrito: provincia (1 dígito) + cantón (2) + distrito (2)

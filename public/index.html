@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>API de códigos postales y distritos de Costa Rica</title>
-<meta name="description" content="API JSON gratis con los códigos postales, 7 provincias, 84 cantones y 494 distritos de Costa Rica, según la DTA 2026 del IGN. Sin API key.">
+<title>Código postal de Costa Rica: buscador por distrito y cantón</title>
+<meta name="description" content="Buscá el código postal (zip code) de cualquier distrito de Costa Rica. Los 494 distritos, 84 cantones y 7 provincias con datos oficiales del IGN (DTA 2026).">
 <link rel="canonical" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="alternate" hreflang="es" href="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <link rel="alternate" hreflang="en" href="https://ubicaciones-cr.ryze-cr.workers.dev/en/">
@@ -19,8 +19,8 @@
 <meta property="og:locale" content="es_CR">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:site_name" content="Flashout Labs">
-<meta property="og:title" content="API de códigos postales y distritos de Costa Rica">
-<meta property="og:description" content="Códigos postales, 7 provincias, 84 cantones y 494 distritos de Costa Rica en JSON. Datos oficiales del IGN (DTA 2026), gratis y sin API key.">
+<meta property="og:title" content="Código postal de Costa Rica: buscador por distrito y cantón">
+<meta property="og:description" content="El código postal de los 494 distritos de Costa Rica, por provincia y cantón. Datos oficiales del IGN (DTA 2026), gratis y con API.">
 <meta property="og:url" content="https://ubicaciones-cr.ryze-cr.workers.dev/">
 <meta property="og:image" content="https://ubicaciones-cr.ryze-cr.workers.dev/og.png">
 <meta property="og:image:width" content="1200">
@@ -70,45 +70,67 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <header class="inicio">
     <nav class="idiomas" aria-label="Idioma / Language">
       <a href="/" lang="es" hreflang="es" aria-current="page">Español</a>
       <a href="/en/" lang="en" hreflang="en">English</a>
     </nav>
-    <h1>API de códigos postales y distritos de Costa Rica</h1>
-    <p class="lede">API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica. Archivos estáticos, CORS abierto y sin API key.</p>
-    <div class="acciones">
-      <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
-        Ver en GitHub
-      </a>
-    </div>
-    <div class="stats" aria-live="polite">
-      <div class="stat"><b id="n-provincias">7</b><span>provincias</span></div>
-      <div class="stat"><b id="n-cantones">84</b><span>cantones</span></div>
-      <div class="stat"><b id="n-distritos">494</b><span>distritos</span></div>
-    </div>
-    <p class="source">Fuente: <a id="fuente" href="https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf">División Territorial Administrativa 2026</a>, Instituto Geográfico Nacional.</p>
+    <h1>Código postal de Costa Rica</h1>
+    <p class="lede">Buscá el código postal de cualquier distrito por su nombre o por su número. Datos oficiales del IGN para las 7 provincias, 84 cantones y 494 distritos.</p>
+    <form class="buscador" role="search" id="form-buscador">
+      <label class="sr-only" for="buscador">Buscar un distrito, cantón o código postal</label>
+      <input id="buscador" type="search" autocomplete="off" spellcheck="false" placeholder="Ej.: San Antonio de Desamparados, Escazú o 10305" aria-describedby="buscador-ayuda">
+    </form>
+    <p class="ayuda" id="buscador-ayuda">Escribí el nombre de un distrito o cantón, o un código postal de 5 dígitos.</p>
+    <ul class="resultados" id="resultados" aria-live="polite"></ul>
   </header>
 
-  <div class="intro-demo">
-    <h2 id="explorar-titulo">Explorar ubicaciones</h2>
-    <p class="explorar-lede">Elegí una provincia, un cantón y un distrito para ver su código postal, o escribí un código para saber a qué distrito pertenece.</p>
-  </div>
-
   <section class="demo" aria-labelledby="demo-titulo">
-    <h2 id="demo-titulo" style="margin-top:0">Probalo</h2>
+    <h2 id="demo-titulo" style="margin-top:0">Buscar por provincia, cantón y distrito</h2>
     <div class="selects">
       <div><label for="sel-provincia">Provincia</label><select id="sel-provincia"><option value="">Cargando…</option></select></div>
       <div><label for="sel-canton">Cantón</label><select id="sel-canton" disabled><option value="">—</option></select></div>
       <div><label for="sel-distrito">Distrito</label><select id="sel-distrito" disabled><option value="">—</option></select></div>
     </div>
-    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><span class="etiqueta-gam" id="cp-gam" hidden></span><button type="button" class="copiar" id="copiar-cp" hidden>Copiar</button><small id="cp-ruta"></small></div>
-    <form class="lookup" id="form-cp">
-      <label for="in-cp" style="flex-basis:100%;margin:0">Buscar por código postal</label>
-      <input id="in-cp" inputmode="numeric" maxlength="5" pattern="[1-7][0-9]{4}" placeholder="10305" autocomplete="off">
-      <output id="out-cp" for="in-cp"></output>
-    </form>
+    <div class="result" aria-live="polite"><span class="cp" id="cp"></span><span class="etiqueta-gam" id="cp-gam" hidden></span><button type="button" class="copiar" id="copiar-cp" hidden>Copiar</button><a id="cp-enlace" hidden></a></div>
+  </section>
+
+  <section aria-labelledby="provincias-titulo">
+    <h2 id="provincias-titulo">Provincias y cantones de Costa Rica</h2>
+    <p class="explorar-lede">Elegí una provincia o un cantón para ver los códigos postales de todos sus distritos.</p>
+    <!-- provincias:inicio -->
+    <div class="provincias">
+      <div class="provincia">
+        <h3><a href="/san-jose/">San José</a> <code>1</code></h3>
+        <p><a href="/san-jose/san-jose/">San José</a> · <a href="/san-jose/escazu/">Escazú</a> · <a href="/san-jose/desamparados/">Desamparados</a> · <a href="/san-jose/puriscal/">Puriscal</a> · <a href="/san-jose/tarrazu/">Tarrazú</a> · <a href="/san-jose/aserri/">Aserrí</a> · <a href="/san-jose/mora/">Mora</a> · <a href="/san-jose/goicoechea/">Goicoechea</a> · <a href="/san-jose/santa-ana/">Santa Ana</a> · <a href="/san-jose/alajuelita/">Alajuelita</a> · <a href="/san-jose/vazquez-de-coronado/">Vázquez de Coronado</a> · <a href="/san-jose/acosta/">Acosta</a> · <a href="/san-jose/tibas/">Tibás</a> · <a href="/san-jose/moravia/">Moravia</a> · <a href="/san-jose/montes-de-oca/">Montes de Oca</a> · <a href="/san-jose/turrubares/">Turrubares</a> · <a href="/san-jose/dota/">Dota</a> · <a href="/san-jose/curridabat/">Curridabat</a> · <a href="/san-jose/perez-zeledon/">Pérez Zeledón</a> · <a href="/san-jose/leon-cortes-castro/">León Cortés Castro</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/alajuela/">Alajuela</a> <code>2</code></h3>
+        <p><a href="/alajuela/alajuela/">Alajuela</a> · <a href="/alajuela/san-ramon/">San Ramón</a> · <a href="/alajuela/grecia/">Grecia</a> · <a href="/alajuela/san-mateo/">San Mateo</a> · <a href="/alajuela/atenas/">Atenas</a> · <a href="/alajuela/naranjo/">Naranjo</a> · <a href="/alajuela/palmares/">Palmares</a> · <a href="/alajuela/poas/">Poás</a> · <a href="/alajuela/orotina/">Orotina</a> · <a href="/alajuela/san-carlos/">San Carlos</a> · <a href="/alajuela/zarcero/">Zarcero</a> · <a href="/alajuela/sarchi/">Sarchí</a> · <a href="/alajuela/upala/">Upala</a> · <a href="/alajuela/los-chiles/">Los Chiles</a> · <a href="/alajuela/guatuso/">Guatuso</a> · <a href="/alajuela/rio-cuarto/">Río Cuarto</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/cartago/">Cartago</a> <code>3</code></h3>
+        <p><a href="/cartago/cartago/">Cartago</a> · <a href="/cartago/paraiso/">Paraíso</a> · <a href="/cartago/la-union/">La Unión</a> · <a href="/cartago/jimenez/">Jiménez</a> · <a href="/cartago/turrialba/">Turrialba</a> · <a href="/cartago/alvarado/">Alvarado</a> · <a href="/cartago/oreamuno/">Oreamuno</a> · <a href="/cartago/el-guarco/">El Guarco</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/heredia/">Heredia</a> <code>4</code></h3>
+        <p><a href="/heredia/heredia/">Heredia</a> · <a href="/heredia/barva/">Barva</a> · <a href="/heredia/santo-domingo/">Santo Domingo</a> · <a href="/heredia/santa-barbara/">Santa Bárbara</a> · <a href="/heredia/san-rafael/">San Rafael</a> · <a href="/heredia/san-isidro/">San Isidro</a> · <a href="/heredia/belen/">Belén</a> · <a href="/heredia/flores/">Flores</a> · <a href="/heredia/san-pablo/">San Pablo</a> · <a href="/heredia/sarapiqui/">Sarapiquí</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/guanacaste/">Guanacaste</a> <code>5</code></h3>
+        <p><a href="/guanacaste/liberia/">Liberia</a> · <a href="/guanacaste/nicoya/">Nicoya</a> · <a href="/guanacaste/santa-cruz/">Santa Cruz</a> · <a href="/guanacaste/bagaces/">Bagaces</a> · <a href="/guanacaste/carrillo/">Carrillo</a> · <a href="/guanacaste/canas/">Cañas</a> · <a href="/guanacaste/abangares/">Abangares</a> · <a href="/guanacaste/tilaran/">Tilarán</a> · <a href="/guanacaste/nandayure/">Nandayure</a> · <a href="/guanacaste/la-cruz/">La Cruz</a> · <a href="/guanacaste/hojancha/">Hojancha</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/puntarenas/">Puntarenas</a> <code>6</code></h3>
+        <p><a href="/puntarenas/puntarenas/">Puntarenas</a> · <a href="/puntarenas/esparza/">Esparza</a> · <a href="/puntarenas/buenos-aires/">Buenos Aires</a> · <a href="/puntarenas/montes-de-oro/">Montes de Oro</a> · <a href="/puntarenas/osa/">Osa</a> · <a href="/puntarenas/quepos/">Quepos</a> · <a href="/puntarenas/golfito/">Golfito</a> · <a href="/puntarenas/coto-brus/">Coto Brus</a> · <a href="/puntarenas/parrita/">Parrita</a> · <a href="/puntarenas/corredores/">Corredores</a> · <a href="/puntarenas/garabito/">Garabito</a> · <a href="/puntarenas/monteverde/">Monteverde</a> · <a href="/puntarenas/puerto-jimenez/">Puerto Jiménez</a></p>
+      </div>
+      <div class="provincia">
+        <h3><a href="/limon/">Limón</a> <code>7</code></h3>
+        <p><a href="/limon/limon/">Limón</a> · <a href="/limon/pococi/">Pococí</a> · <a href="/limon/siquirres/">Siquirres</a> · <a href="/limon/talamanca/">Talamanca</a> · <a href="/limon/matina/">Matina</a> · <a href="/limon/guacimo/">Guácimo</a></p>
+      </div>
+    </div>
+    <p class="ver-listas"><a href="/cantones-de-costa-rica/">Ver los 84 cantones</a> · <a href="/distritos-de-costa-rica/">Ver los 494 distritos</a></p>
+    <!-- provincias:fin -->
   </section>
 
   <section aria-labelledby="distritos-gam">
@@ -133,28 +155,72 @@
     </div>
   </section>
 
-  <h2 id="endpoints">Endpoints de la API</h2>
-  <p>Todos responden <code>GET</code> con JSON. Los números de cantón y distrito van sin ceros a la izquierda.</p>
-  <div class="table-scroll">
-  <table>
-    <thead><tr><th>Ruta</th><th>Devuelve</th></tr></thead>
-    <tbody>
-      <tr><td><code>/provincias.json</code></td><td>Las 7 provincias</td></tr>
-      <tr><td><code>/provincia/{p}/cantones.json</code></td><td>Cantones de una provincia</td></tr>
-      <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Distritos de un cantón</td></tr>
-      <tr><td><code>/codigo-postal/{PCCDD}.json</code><span class="tag">nuevo</span></td><td>Un distrito por su código postal, con su cantón y provincia</td></tr>
-      <tr><td><code>/distritos.json</code><span class="tag">nuevo</span></td><td>Lista plana de todos los distritos con código postal</td></tr>
-      <tr><td><code>/gam.json</code><span class="tag">nuevo</span></td><td>Códigos postales dentro y fuera de la GAM, para tarifas de envío</td></tr>
-      <tr><td><code>/todo.json</code><span class="tag">nuevo</span></td><td>Árbol completo con códigos oficiales y áreas en km²</td></tr>
-      <tr><td><code>/meta.json</code><span class="tag">nuevo</span></td><td>Versión de la API, fuente, edición y totales</td></tr>
-      <tr><td><code>/openapi.json</code></td><td>Especificación OpenAPI 3.1 de la API</td></tr>
-      <tr><td><code>/llms.txt</code></td><td>Guía de uso para agentes de IA</td></tr>
-    </tbody>
-  </table>
+  <h2 id="codigo-postal">Cómo funciona el código postal de Costa Rica</h2>
+  <p>Costa Rica no tiene un único código postal: <b>cada distrito tiene el suyo</b>, de 5 dígitos. Es el código oficial del distrito: <b>P</b> (provincia, 1 dígito) + <b>CC</b> (cantón, 2 dígitos) + <b>DD</b> (distrito, 2 dígitos). Por ejemplo, San Antonio de Desamparados es <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
+  <p>Los códigos de cada provincia empiezan con su número: San José <code>1</code>, Alajuela <code>2</code>, Cartago <code>3</code>, Heredia <code>4</code>, Guanacaste <code>5</code>, Puntarenas <code>6</code> y Limón <code>7</code>. Cuando un distrito pasa a otro cantón, su código viejo se retira y no se reutiliza, así que puede haber saltos en la numeración (por ejemplo, Grecia no tiene distrito 6).</p>
+
+  <h2 id="preguntas-frecuentes">Preguntas frecuentes</h2>
+  <div class="faq">
+    <details>
+      <summary>¿Cuál es el código postal de Costa Rica?</summary>
+      <p>No hay uno solo: cada uno de los 494 distritos tiene su propio código de 5 dígitos. Por ejemplo, el centro de San José (distrito Carmen) es <code>10101</code>, Alajuela centro es <code>20101</code>, Cartago (Oriental) es <code>30101</code> y Heredia centro es <code>40101</code>. Buscá el tuyo con el buscador de arriba.</p>
+    </details>
+    <details>
+      <summary>¿Qué pongo en "zip code" cuando compro en línea?</summary>
+      <p>El código postal de 5 dígitos de tu distrito. Los formularios internacionales lo llaman "zip code" o "postal code", pero en Costa Rica es el mismo número.</p>
+    </details>
+    <details>
+      <summary>¿Cuántas provincias, cantones y distritos tiene Costa Rica?</summary>
+      <p>Según la División Territorial Administrativa 2026 del IGN, Costa Rica tiene <b>7 provincias, 84 cantones y 494 distritos</b>. Los cantones más recientes son Monteverde y Puerto Jiménez, en Puntarenas. Los distritos más nuevos son Pijije (Bagaces) y Cabagra (Buenos Aires), creados por ley en mayo de 2025.</p>
+    </details>
+    <details>
+      <summary>¿Qué códigos postales son de la GAM?</summary>
+      <p>Hoy son 167 distritos dentro de la Gran Área Metropolitana y 327 fuera; podés verlos en la <a href="#distritos-gam">lista de distritos</a>. Se usa la definición oficial del Plan GAM 2013-2030 del MIVAH. Cuando el límite parte un distrito, cuenta como GAM si al menos la mitad de sus edificaciones quedan dentro. Algunas empresas de envío usan su propia lista; por ejemplo, Grecia no es GAM en la definición oficial.</p>
+    </details>
+    <details>
+      <summary>¿De dónde salen los datos?</summary>
+      <p>De la División Territorial Administrativa 2026 del Instituto Geográfico Nacional (IGN), la división oficial de provincias, cantones y distritos. El código postal es el código oficial de cada distrito.</p>
+    </details>
   </div>
 
-  <h2 id="ejemplos">Ejemplos de uso</h2>
-  <pre><code>// Cantones de San José
+  <section id="api" class="api" aria-labelledby="api-titulo">
+    <h2 id="api-titulo">API gratuita de códigos postales para desarrolladores</h2>
+    <p class="explorar-lede">Todos estos datos están disponibles como API JSON gratuita: archivos estáticos, CORS abierto y sin API key.</p>
+    <div class="acciones">
+      <a class="boton" href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        Ver en GitHub
+      </a>
+    </div>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="n-provincias">7</b><span>provincias</span></div>
+      <div class="stat"><b id="n-cantones">84</b><span>cantones</span></div>
+      <div class="stat"><b id="n-distritos">494</b><span>distritos</span></div>
+    </div>
+    <p class="source">Fuente: <a id="fuente" href="https://www.snitcr.go.cr/pdfs/ign_repositorio/DTA-TABLA%20POR%20PROVINCIA-CANT%C3%93N-DISTRITO%202026.pdf">División Territorial Administrativa 2026</a>, Instituto Geográfico Nacional.</p>
+
+    <h3 id="endpoints">Endpoints de la API</h3>
+    <p>Todos responden <code>GET</code> con JSON. Los números de cantón y distrito van sin ceros a la izquierda.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Ruta</th><th>Devuelve</th></tr></thead>
+      <tbody>
+        <tr><td><code>/provincias.json</code></td><td>Las 7 provincias</td></tr>
+        <tr><td><code>/provincia/{p}/cantones.json</code></td><td>Cantones de una provincia</td></tr>
+        <tr><td><code>/provincia/{p}/canton/{c}/distritos.json</code></td><td>Distritos de un cantón</td></tr>
+        <tr><td><code>/codigo-postal/{PCCDD}.json</code></td><td>Un distrito por su código postal, con su cantón y provincia</td></tr>
+        <tr><td><code>/distritos.json</code></td><td>Lista plana de todos los distritos con código postal</td></tr>
+        <tr><td><code>/gam.json</code></td><td>Códigos postales dentro y fuera de la GAM, para tarifas de envío</td></tr>
+        <tr><td><code>/todo.json</code></td><td>Árbol completo con códigos oficiales y áreas en km²</td></tr>
+        <tr><td><code>/meta.json</code></td><td>Versión de la API, fuente, edición y totales</td></tr>
+        <tr><td><code>/openapi.json</code></td><td>Especificación OpenAPI 3.1 de la API</td></tr>
+        <tr><td><code>/llms.txt</code></td><td>Guía de uso para agentes de IA</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3 id="ejemplos">Ejemplos de uso</h3>
+    <pre><code>// Cantones de San José
 const cantones = await fetch('/provincia/1/cantones.json').then(r =&gt; r.json());
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
 
@@ -163,37 +229,22 @@ const d = await fetch('/codigo-postal/10305.json').then(r =&gt; r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados",
 //   "provincia": "San José", "codigos": { "provincia": 1, "canton": 3, "distrito": 5 }, "gam": true, ... }</code></pre>
 
-  <h2 id="codigo-postal">Cómo funciona el código postal de Costa Rica</h2>
-  <p>El código postal de Costa Rica es el código oficial del distrito: <b>P</b> (provincia, 1 dígito) + <b>CC</b> (cantón, 2 dígitos) + <b>DD</b> (distrito, 2 dígitos). Por ejemplo, San Antonio de Desamparados es <code>1</code> <code>03</code> <code>05</code> = <code>10305</code>.</p>
-  <p>Cuando un distrito pasa a otro cantón, su código viejo se retira y no se reutiliza, así que puede haber saltos en la numeración (por ejemplo, Grecia no tiene distrito 6).</p>
-
-  <h2 id="preguntas-frecuentes">Preguntas frecuentes</h2>
-  <div class="faq">
-    <details>
-      <summary>¿Cuántas provincias, cantones y distritos tiene Costa Rica?</summary>
-      <p>Según la División Territorial Administrativa 2026 del IGN, Costa Rica tiene <b>7 provincias, 84 cantones y 494 distritos</b>. Los cantones más recientes son Monteverde y Puerto Jiménez, en Puntarenas. Los distritos más nuevos son Pijije (Bagaces) y Cabagra (Buenos Aires), creados por ley en mayo de 2025.</p>
-    </details>
-    <details>
-      <summary>¿Cuál es el código postal de un distrito?</summary>
-      <p>Es el código oficial del distrito, de 5 dígitos. Podés buscarlo arriba en el demo, o consultar <code>/codigo-postal/{código}.json</code> para obtener el distrito, cantón y provincia de un código postal.</p>
-    </details>
-    <details>
-      <summary>¿Qué códigos postales son de la GAM?</summary>
-      <p>Cada distrito trae el campo <code>gam</code>, <code>/gam.json</code> tiene las dos listas completas y podés consultarlas en la <a href="#distritos-gam">lista de distritos</a>: hoy son 167 distritos dentro de la Gran Área Metropolitana y 327 fuera. Se usa la definición oficial del Plan GAM 2013-2030 del MIVAH. Cuando el límite parte un distrito, cuenta como GAM si al menos la mitad de sus edificaciones quedan dentro. Algunas empresas de envío usan su propia lista; por ejemplo, Grecia no es GAM en la definición oficial.</p>
-    </details>
-    <details>
-      <summary>¿La API es gratis? ¿Necesito una API key?</summary>
-      <p>Es gratis y no necesita API key ni registro. Tiene CORS abierto, así que la podés usar directamente desde el navegador, una app móvil o un servidor.</p>
-    </details>
-    <details>
-      <summary>¿Cada cuánto se actualizan los datos?</summary>
-      <p>Cuando el Instituto Geográfico Nacional publica una nueva edición de la División Territorial Administrativa, que sale cada dos años, o cuando una ley crea un cantón o distrito nuevo. <code>/meta.json</code> indica la edición vigente.</p>
-    </details>
-    <details>
-      <summary>¿Sirve como reemplazo de ubicaciones.paginasweb.cr?</summary>
-      <p>Sí. Las rutas <code>/provincias.json</code>, <code>/provincia/{p}/cantones.json</code> y <code>/provincia/{p}/canton/{c}/distritos.json</code> tienen la misma forma, así que solo cambiás la URL base.</p>
-    </details>
-  </div>
+    <h3>Preguntas sobre la API</h3>
+    <div class="faq">
+      <details>
+        <summary>¿La API es gratis? ¿Necesito una API key?</summary>
+        <p>Es gratis y no necesita API key ni registro. Tiene CORS abierto, así que la podés usar directamente desde el navegador, una app móvil o un servidor.</p>
+      </details>
+      <details>
+        <summary>¿Cada cuánto se actualizan los datos?</summary>
+        <p>Cuando el Instituto Geográfico Nacional publica una nueva edición de la División Territorial Administrativa, que sale cada dos años, o cuando una ley crea un cantón o distrito nuevo. <code>/meta.json</code> indica la edición vigente.</p>
+      </details>
+      <details>
+        <summary>¿Sirve como reemplazo de ubicaciones.paginasweb.cr?</summary>
+        <p>Sí. Las rutas <code>/provincias.json</code>, <code>/provincia/{p}/cantones.json</code> y <code>/provincia/{p}/canton/{c}/distritos.json</code> tienen la misma forma, así que solo cambiás la URL base.</p>
+      </details>
+    </div>
+  </section>
 
   <footer>
     <p>Un proyecto de Flashout Labs. Hecho gracias a <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>

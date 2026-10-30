@@ -15,7 +15,9 @@ jobs:
           python-version: '3.12'
       - name: Regenerar la API desde data/dta.json
         run: python scripts/generar_api.py
+      - name: Regenerar las páginas web, el buscador y el sitemap
+        run: python scripts/generar_paginas.py
       - name: Los archivos de public/ deben estar al día
-        run: git diff --exit-code -- public/ || (echo "Corré scripts/generar_api.py y subí el resultado" && exit 1)
+        run: git diff --exit-code -- public/ || (echo "Corré scripts/generar_api.py y scripts/generar_paginas.py y subí el resultado" && exit 1)
       - name: Validar totales y códigos
         run: python scripts/validar.py

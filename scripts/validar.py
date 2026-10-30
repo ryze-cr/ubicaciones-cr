@@ -92,6 +92,24 @@ for ruta in list(spec['paths']) + ['/openapi.json', '/llms.txt']:
     for nombre, texto in documentos.items():
         if nombre != 'llms.txt' or ruta != '/llms.txt':
             revisar(ruta in texto, f'{nombre} no documenta la ruta {ruta}')
+# Páginas web por distrito, buscador y sitemap (scripts/generar_paginas.py)
+import importlib.util
+spec_paginas = importlib.util.spec_from_file_location('generar_paginas', RAIZ / 'scripts/generar_paginas.py')
+paginas = importlib.util.module_from_spec(spec_paginas)
+spec_paginas.loader.exec_module(paginas)
+buscador = leer('buscador.json')
+revisar(sorted(f['c'] for f in buscador) == sorted(codigos), 'buscador.json no tiene exactamente los distritos de data/dta.json')
+for p in dta['provincias']:
+    for c in p['cantones']:
+        for d in c['distritos']:
+            for prefijo in ('', 'en/'):
+                pagina = PUBLIC / prefijo / paginas.slug(p['nombre']) / paginas.slug(c['nombre']) / paginas.slug(d['nombre']) / 'index.html'
+                revisar(pagina.exists() and f"{d['codigo']}</title>" in pagina.read_text(encoding='utf-8'),
+                        f'falta o está desactualizada la página {pagina.relative_to(PUBLIC)}')
+urls_sitemap = (PUBLIC / 'sitemap.xml').read_text(encoding='utf-8').count('<loc>')
+esperadas = 2 * (1 + 2 + len(dta['provincias']) + len(cantones) + len(distritos))
+revisar(urls_sitemap == esperadas, f'sitemap.xml tiene {urls_sitemap} URLs y deberían ser {esperadas}')
+revisar('<!-- provincias:inicio -->' in indice and '/san-jose/' in indice, 'index.html no tiene el bloque de provincias generado')
 revisar((PUBLIC / 'og.png').exists(), 'falta public/og.png (correr scripts/generar_imagen_og.py)')
 revisar((PUBLIC / '404.html').exists(), 'falta public/404.html (sin él, Cloudflare Pages responde 200 a rutas inexistentes)')
 

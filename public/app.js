@@ -1,4 +1,4 @@
-// Demo y búsqueda por código postal de la página de documentación.
+// Buscador de códigos postales, selectores y lista GAM de la página principal.
 // Los textos cambian según el atributo lang del <html> (es o en).
 
 const TEXTOS = {
@@ -6,32 +6,37 @@ const TEXTOS = {
     elegirProvincia: 'Elegí una provincia',
     elegirCanton: 'Elegí un cantón',
     elegirDistrito: 'Elegí un distrito',
-    formatoCP: 'Son 5 dígitos y el primero va de 1 a 7.',
     cpNoExiste: 'Ese código postal no existe.',
-    enGam: 'GAM',
-    fueraGam: 'Fuera de la GAM',
-    total: (n) => `${n} ${n === 1 ? 'distrito' : 'distritos'}`,
+    sinResultados: 'No encontramos ese distrito, cantón ni código postal.',
     copiar: 'Copiar',
     copiado: 'Copiado',
+    enGam: 'GAM',
+    fueraGam: 'Fuera de la GAM',
+    verPagina: 'Ver página del distrito',
+    total: (n) => `${n} ${n === 1 ? 'distrito' : 'distritos'}`,
   },
   en: {
     elegirProvincia: 'Choose a province',
     elegirCanton: 'Choose a canton',
     elegirDistrito: 'Choose a district',
-    formatoCP: 'Postal codes have 5 digits and start with 1 to 7.',
     cpNoExiste: 'That postal code does not exist.',
-    enGam: 'GAM',
-    fueraGam: 'Outside the GAM',
-    total: (n) => `${n} ${n === 1 ? 'district' : 'districts'}`,
+    sinResultados: 'No district, canton or postal code matches that search.',
     copiar: 'Copy',
     copiado: 'Copied',
+    enGam: 'GAM',
+    fueraGam: 'Outside the GAM',
+    verPagina: 'See district page',
+    total: (n) => `${n} ${n === 1 ? 'district' : 'districts'}`,
   },
 };
-const T = TEXTOS[document.documentElement.lang] || TEXTOS.es;
+const LANG = document.documentElement.lang === 'en' ? 'en' : 'es';
+const T = TEXTOS[LANG];
+const PREFIJO = LANG === 'en' ? '/en' : '';
 
 const $ = (id) => document.getElementById(id);
 const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
 const pad = (n) => String(n).padStart(2, '0');
+const sinTildes = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 function crear(tag, attrs = {}, ...hijos) {
   const e = document.createElement(tag);
@@ -40,39 +45,10 @@ function crear(tag, attrs = {}, ...hijos) {
   return e;
 }
 
-// Totales en vivo desde /meta.json
-getJSON('/meta.json').then((m) => {
-  for (const k of ['provincias', 'cantones', 'distritos']) $('n-' + k).textContent = m.totales[k];
-  $('fuente').href = m.fuente.url;
-}).catch(() => {});
-
-// Demo: selectores en cascada
-// Todos los distritos con su código postal y el campo gam; lo usan las etiquetas y la lista por zona
-const distritos = getJSON('/distritos.json');
-const enGam = distritos.then((ds) => new Set(ds.filter((d) => d.gam).map((d) => d.codigo_postal)));
-const sinTildes = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
 function etiquetaGam(nodo, esGam) {
   nodo.textContent = esGam ? T.enGam : T.fueraGam;
   nodo.classList.toggle('si', esGam);
   nodo.hidden = false;
-}
-
-function fill(select, data, placeholder) {
-  select.replaceChildren(crear('option', { value: '' }, placeholder),
-    ...Object.entries(data).map(([k, v]) => crear('option', { value: k }, v)));
-  select.disabled = false;
-}
-function reset(select) { select.replaceChildren(crear('option', { value: '' }, '—')); select.disabled = true; }
-async function showCP(text = '', route = '') {
-  $('cp').textContent = text;
-  $('cp-ruta').textContent = route;
-  if (text) etiquetaGam($('cp-gam'), (await enGam).has(text));
-  else $('cp-gam').hidden = true;
-  const boton = $('copiar-cp');
-  boton.hidden = !text;
-  boton.textContent = T.copiar;
-  boton.classList.remove('listo');
 }
 
 // Copia el texto y marca el botón; si no hay acceso al portapapeles, selecciona el texto para copiarlo a mano
@@ -91,6 +67,83 @@ async function copiar(boton, texto, nodo) {
   }
 }
 
+// Índice de los 494 distritos: c = código postal, d = distrito, k = cantón, p = provincia, g = GAM (1/0), u = página
+const indice = getJSON('/buscador.json').then((filas) => filas.map((f) => ({
+  ...f, texto: sinTildes(`${f.d} ${f.k} ${f.p}`), distrito: sinTildes(f.d), canton: sinTildes(f.k),
+})));
+const porCodigo = indice.then((filas) => new Map(filas.map((f) => [f.c, f])));
+
+// Totales en vivo desde /meta.json
+getJSON('/meta.json').then((m) => {
+  for (const k of ['provincias', 'cantones', 'distritos']) $('n-' + k).textContent = m.totales[k];
+  $('fuente').href = m.fuente.url;
+}).catch(() => {});
+
+// Buscador principal: por nombre de distrito o cantón, o por código postal
+function buscar(filas, consulta) {
+  const q = sinTildes(consulta.trim());
+  if (!q) return [];
+  if (/^\d+$/.test(q)) return filas.filter((f) => f.c.startsWith(q)).slice(0, 8);
+  const palabras = q.split(/\s+/).filter((w) => !['de', 'del', 'la', 'el', 'en'].includes(w));
+  const puntaje = (f) => (f.distrito === q ? 0 : f.distrito.startsWith(q) ? 1 : f.canton.startsWith(q) ? 2 : 3);
+  return filas.filter((f) => palabras.every((w) => f.texto.includes(w)))
+    .sort((a, b) => puntaje(a) - puntaje(b) || a.c.localeCompare(b.c)).slice(0, 8);
+}
+
+function resultado(f) {
+  const etiqueta = crear('span', { class: 'etiqueta-gam' });
+  etiquetaGam(etiqueta, f.g === 1);
+  const boton = crear('button', { type: 'button', class: 'copiar' }, T.copiar);
+  const codigo = crear('span', { class: 'cp' }, f.c);
+  boton.addEventListener('click', () => copiar(boton, f.c, codigo));
+  return crear('li', {},
+    crear('a', { href: PREFIJO + f.u }, crear('span', { class: 'lugar' }, f.d), crear('span', { class: 'lugar-ruta' }, `${f.k} · ${f.p}`)),
+    codigo, etiqueta, boton);
+}
+
+$('buscador').addEventListener('input', async (e) => {
+  const v = e.target.value;
+  const filas = buscar(await indice, v);
+  const lista = $('resultados');
+  if (!v.trim()) return lista.replaceChildren();
+  if (!filas.length) {
+    const msg = /^\d{5}$/.test(v.trim()) ? T.cpNoExiste : T.sinResultados;
+    return lista.replaceChildren(crear('li', { class: 'sin-resultados' }, msg));
+  }
+  lista.replaceChildren(...filas.map(resultado));
+});
+// Enter abre el primer resultado
+$('form-buscador').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const [primero] = buscar(await indice, $('buscador').value);
+  if (primero) location.href = PREFIJO + primero.u;
+});
+
+// Selectores en cascada: provincia → cantón → distrito
+function fill(select, data, placeholder) {
+  select.replaceChildren(crear('option', { value: '' }, placeholder),
+    ...Object.entries(data).map(([k, v]) => crear('option', { value: k }, v)));
+  select.disabled = false;
+}
+function reset(select) { select.replaceChildren(crear('option', { value: '' }, '—')); select.disabled = true; }
+async function showCP(text = '') {
+  $('cp').textContent = text;
+  const boton = $('copiar-cp'), enlace = $('cp-enlace');
+  boton.hidden = !text;
+  boton.textContent = T.copiar;
+  boton.classList.remove('listo');
+  enlace.hidden = true;
+  $('cp-gam').hidden = true;
+  if (!text) return;
+  const f = (await porCodigo).get(text);
+  if (f) {
+    etiquetaGam($('cp-gam'), f.g === 1);
+    enlace.href = PREFIJO + f.u;
+    enlace.textContent = T.verPagina;
+    enlace.hidden = false;
+  }
+}
+
 $('copiar-cp').addEventListener('click', (e) => copiar(e.currentTarget, $('cp').textContent, $('cp')));
 
 getJSON('/provincias.json').then((d) => fill($('sel-provincia'), d, T.elegirProvincia));
@@ -106,43 +159,24 @@ $('sel-canton').addEventListener('change', async (e) => {
 });
 $('sel-distrito').addEventListener('change', (e) => {
   const p = $('sel-provincia').value, c = $('sel-canton').value, d = e.target.value;
-  if (!d) return showCP();
-  showCP(`${p}${pad(c)}${pad(d)}`, `/codigo-postal/${p}${pad(c)}${pad(d)}.json`);
+  showCP(d ? `${p}${pad(c)}${pad(d)}` : '');
 });
-
-// Búsqueda por código postal
-$('in-cp').addEventListener('input', async (e) => {
-  const v = e.target.value.trim(), out = $('out-cp');
-  if (!/^[1-7]\d{4}$/.test(v)) { out.textContent = v ? T.formatoCP : ''; return; }
-  try {
-    const d = await getJSON(`/codigo-postal/${v}.json`);
-    const lugar = crear('span', { class: 'lugar' }, d.distrito);
-    const boton = crear('button', { type: 'button', class: 'copiar' }, T.copiar);
-    boton.addEventListener('click', () => copiar(boton, `${d.distrito}, ${d.canton}, ${d.provincia}`, out));
-    const etiqueta = crear('span', { class: 'etiqueta-gam' });
-    etiquetaGam(etiqueta, d.gam);
-    out.replaceChildren(crear('span', { class: 'lugar-fila' }, lugar, etiqueta, boton),
-      crear('span', { class: 'lugar-ruta' }, `${d.canton} · ${d.provincia}`));
-  } catch { out.textContent = T.cpNoExiste; }
-});
-$('form-cp').addEventListener('submit', (e) => e.preventDefault());
 
 // Lista de distritos dentro y fuera de la GAM
 async function renderLista() {
   const zona = document.querySelector('input[name="zona"]:checked').value;
   const filtro = sinTildes($('filtro-lista').value.trim());
-  const filas = (await distritos).filter((d) => (zona === 'todas' || d.gam === (zona === 'gam')) &&
-    (!filtro || d.codigo_postal.startsWith(filtro) || sinTildes(`${d.distrito} ${d.canton} ${d.provincia}`).includes(filtro)));
-  $('lista-gam').replaceChildren(...filas.map((d) => {
+  const filas = (await indice).filter((f) => (zona === 'todas' || (f.g === 1) === (zona === 'gam')) &&
+    (!filtro || f.c.startsWith(filtro) || f.texto.includes(filtro)));
+  $('lista-gam').replaceChildren(...filas.map((f) => {
     const etiqueta = crear('span', { class: 'etiqueta-gam' });
-    etiquetaGam(etiqueta, d.gam);
-    return crear('tr', {}, crear('td', {}, crear('code', {}, d.codigo_postal)),
-      crear('td', {}, d.distrito, crear('span', { class: 'sub' }, `${d.canton} · ${d.provincia}`)),
-      crear('td', {}, d.canton), crear('td', {}, d.provincia), crear('td', {}, etiqueta));
+    etiquetaGam(etiqueta, f.g === 1);
+    return crear('tr', {}, crear('td', {}, crear('code', {}, f.c)),
+      crear('td', {}, crear('a', { href: PREFIJO + f.u }, f.d), crear('span', { class: 'sub' }, `${f.k} · ${f.p}`)),
+      crear('td', {}, f.k), crear('td', {}, f.p), crear('td', {}, etiqueta));
   }));
   $('lista-total').textContent = T.total(filas.length);
 }
 document.querySelectorAll('input[name="zona"]').forEach((r) => r.addEventListener('change', renderLista));
 $('filtro-lista').addEventListener('input', renderLista);
 renderLista();
-
