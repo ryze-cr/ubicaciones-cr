@@ -76,6 +76,12 @@ td code { white-space: nowrap; }
 .faq details p { color: var(--muted); }
 footer { margin: 72px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
 footer a { white-space: nowrap; }
+/* Listas separadas por «·»: el punto vive en el hueco entre elementos y se recorta al inicio de cada línea,
+   así nunca queda colgando al final ni abriendo un renglón */
+.puntos { display: flex; flex-wrap: wrap; column-gap: 1.1em; clip-path: inset(-12px -12px -12px 0); }
+.puntos > * { position: relative; }
+.puntos > * + *::before { content: '·'; position: absolute; left: -.72em; color: var(--muted); pointer-events: none; }
+.puntos a:focus-visible { outline-offset: -2px; }
 
 .explorar-lede { color: var(--muted); max-width: 40rem; margin-bottom: 18px; }
 .lista-controles { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-bottom: 10px; }
@@ -93,7 +99,8 @@ footer a { white-space: nowrap; }
 .filtro-gam legend { float: left; margin-right: 6px; font-family: var(--mono); font-size: .75rem; text-transform: uppercase;
                      letter-spacing: .08em; color: var(--muted); }
 .filtro-gam label { position: relative; cursor: pointer; font-size: .9rem; color: var(--fg); border: 1px solid var(--line);
-                    border-radius: 999px; padding: 5px 13px; }
+                    border-radius: 999px; padding: 0 14px; height: 40px; display: inline-flex; align-items: center; }
+.lista-controles input[type="search"] { height: 40px; padding-top: 0; padding-bottom: 0; }
 .filtro-gam input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .filtro-gam label:hover { border-color: var(--accent); }
 .filtro-gam label:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
@@ -112,6 +119,7 @@ p code, li code, summary code, .faq code { overflow-wrap: anywhere; }
 
 /* Buscador principal */
 header.inicio { padding-bottom: 8px; }
+.resultados:not(:empty) { margin-bottom: 24px; }
 .buscador input { font-size: 1.15rem; padding: 15px 18px; border-radius: var(--radius); border-color: var(--accent); background: var(--surface); }
 .buscador input:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 0; }
 .ayuda { margin: 8px 2px 0; font-size: .9rem; color: var(--muted); }
@@ -188,6 +196,8 @@ table.ficha th { width: 1%; white-space: nowrap; padding-right: 24px; color: var
   .selects { grid-template-columns: 1fr; }
   .stat b { font-size: 1.45rem; }
   .cp-ficha .cp { font-size: 2.4rem; }
+  /* Con el nombre del distrito en dos renglones, cada celda se alinea con el primero */
+  .tabla-distritos td { vertical-align: baseline; }
   .resultados .cp { font-size: 1.2rem; }
   .resultados li { grid-template-columns: auto auto 1fr; }
   .resultados li > a { grid-column: 1 / -1; }
@@ -210,6 +220,11 @@ table.ficha th { width: 1%; white-space: nowrap; padding-right: 24px; color: var
 
 /* Teléfonos: la zona pasa debajo del nombre del distrito para que ninguna tabla necesite scroll lateral */
 @media (max-width: 480px) {
+  /* Ficha del distrito: código y Copiar en la primera fila, la zona debajo, sea GAM o no */
+  .cp-ficha { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "cp copiar" "zona zona"; gap: 10px 14px; }
+  .cp-ficha .cp { grid-area: cp; }
+  .cp-ficha .copiar { grid-area: copiar; justify-self: start; }
+  .cp-ficha .etiqueta-gam { grid-area: zona; justify-self: start; }
   .con-zona th:last-child, .con-zona td:last-child, .tabla-gam th:nth-child(5), .tabla-gam td:nth-child(5) { display: none; }
   .tabla-distritos.con-zona th:first-child { width: 5.25rem; }
   .con-zona .etiqueta-gam.sub-gam, .tabla-gam .etiqueta-gam.sub-gam { display: block; width: fit-content; margin-top: 6px; font-size: .7rem; padding: 2px 9px; }
