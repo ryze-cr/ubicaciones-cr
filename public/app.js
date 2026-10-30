@@ -13,6 +13,8 @@ const TEXTOS = {
     enGam: 'GAM',
     fueraGam: 'Fuera de la GAM',
     verPagina: 'Ver página del distrito',
+    resultados: (n) => `${n} ${n === 1 ? 'resultado' : 'resultados'}`,
+    mostrarMas: (k, resto) => `Mostrar ${k} más (quedan ${resto})`,
     total: (n) => `${n} ${n === 1 ? 'distrito' : 'distritos'}`,
   },
   en: {
@@ -26,6 +28,8 @@ const TEXTOS = {
     enGam: 'GAM',
     fueraGam: 'Outside the GAM',
     verPagina: 'See district page',
+    resultados: (n) => `${n} ${n === 1 ? 'result' : 'results'}`,
+    mostrarMas: (k, resto) => `Show ${k} more (${resto} left)`,
     total: (n) => `${n} ${n === 1 ? 'district' : 'districts'}`,
   },
 };
@@ -79,15 +83,21 @@ getJSON('/meta.json').then((m) => {
   $('fuente').href = m.fuente.url;
 }).catch(() => {});
 
-// Buscador principal: por nombre de distrito o cantón, o por código postal
+// Buscador principal: por nombre de distrito o cantón, o por código postal. Devuelve todas las coincidencias,
+// ordenadas: distrito con ese nombre, distrito que empieza así, cantón con ese nombre, cantón que empieza así,
+// nombre que lo contiene y, al final, las que solo coinciden por la provincia.
 function buscar(filas, consulta) {
-  const q = sinTildes(consulta.trim());
+  const q = sinTildes(consulta.trim()).replace(/\s+/g, ' ');
   if (!q) return [];
-  if (/^\d+$/.test(q)) return filas.filter((f) => f.c.startsWith(q)).slice(0, 8);
-  const palabras = q.split(/\s+/).filter((w) => !['de', 'del', 'la', 'el', 'en'].includes(w));
-  const puntaje = (f) => (f.distrito === q ? 0 : f.distrito.startsWith(q) ? 1 : f.canton.startsWith(q) ? 2 : 3);
+  if (/^\d+$/.test(q)) return filas.filter((f) => f.c.startsWith(q));
+  const palabras = q.split(' ').filter((w) => !['de', 'del', 'la', 'el', 'en'].includes(w));
+  const puntaje = (f) => {
+    const nivel = [f.distrito === q, f.distrito.startsWith(q), f.canton === q, f.canton.startsWith(q),
+      f.distrito.includes(q), f.canton.includes(q)].indexOf(true);
+    return nivel === -1 ? 6 : nivel;
+  };
   return filas.filter((f) => palabras.every((w) => f.texto.includes(w)))
-    .sort((a, b) => puntaje(a) - puntaje(b) || a.c.localeCompare(b.c)).slice(0, 8);
+    .sort((a, b) => puntaje(a) - puntaje(b) || a.c.localeCompare(b.c));
 }
 
 function resultado(f) {
@@ -101,16 +111,40 @@ function resultado(f) {
     codigo, etiqueta, boton);
 }
 
+// Los resultados se muestran de a PASO, con un botón para ver los siguientes
+const PASO = 10;
+let coincidencias = [], mostrados = 0;
+
+function mostrarMas() {
+  const lista = $('resultados');
+  lista.querySelector('.mas')?.remove();
+  const nuevos = coincidencias.slice(mostrados, mostrados + PASO).map(resultado);
+  lista.append(...nuevos);
+  mostrados += nuevos.length;
+  const resto = coincidencias.length - mostrados;
+  if (resto > 0) {
+    lista.append(crear('li', { class: 'mas' },
+      // Al pedir más, el foco pasa al primer resultado nuevo para quien navega con teclado
+      crear('button', { type: 'button', class: 'boton-mas', onclick: () => mostrarMas()[0]?.querySelector('a').focus() },
+        T.mostrarMas(Math.min(PASO, resto), resto))));
+  }
+  return nuevos;
+}
+
 $('buscador').addEventListener('input', async (e) => {
   const v = e.target.value;
-  const filas = buscar(await indice, v);
-  const lista = $('resultados');
-  if (!v.trim()) return lista.replaceChildren();
-  if (!filas.length) {
+  coincidencias = buscar(await indice, v);
+  mostrados = 0;
+  const lista = $('resultados'), total = $('resultados-total');
+  lista.replaceChildren();
+  if (!v.trim()) { total.textContent = ''; return; }
+  if (!coincidencias.length) {
+    total.textContent = '';
     const msg = /^\d{5}$/.test(v.trim()) ? T.cpNoExiste : T.sinResultados;
     return lista.replaceChildren(crear('li', { class: 'sin-resultados' }, msg));
   }
-  lista.replaceChildren(...filas.map(resultado));
+  total.textContent = T.resultados(coincidencias.length);
+  mostrarMas();
 });
 // Enter abre el primer resultado
 $('form-buscador').addEventListener('submit', async (e) => {
