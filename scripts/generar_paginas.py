@@ -38,7 +38,7 @@ T = {
         'buscar_otro': 'Buscar otro código postal',
         'pie': ('<p>Un proyecto de Flashout Labs. Hecho gracias a <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>\n'
                 '    <p>Datos: Instituto Geográfico Nacional, Registro Nacional de Costa Rica (División Territorial Administrativa 2026).</p>\n'
-                '    <p>Código abierto bajo licencia MIT · <a href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">GitHub</a> · '
+                '    <p class="puntos"><span>Código abierto bajo licencia MIT</span><a href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">GitHub</a>'
                 '<a href="/#api">API gratuita</a></p>'),
         'cols_distritos': ('Código postal', 'Distrito', 'Zona'),
     },
@@ -52,7 +52,7 @@ T = {
         'buscar_otro': 'Look up another postal code',
         'pie': ('<p>A Flashout Labs project. Made by <a href="https://github.com/ryze-cr" target="_blank" rel="noopener">Carl De Pass</a>.</p>\n'
                 '    <p>Data: National Geographic Institute (IGN), National Registry of Costa Rica (2026 Administrative Territorial Division).</p>\n'
-                '    <p>Open source under the MIT license · <a href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">GitHub</a> · '
+                '    <p class="puntos"><span>Open source under the MIT license</span><a href="https://github.com/ryze-cr/ubicaciones-cr" target="_blank" rel="noopener">GitHub</a>'
                 '<a href="/en/#api">Free API</a></p>'),
         'cols_distritos': ('Postal code', 'District', 'Zone'),
     },
@@ -217,7 +217,7 @@ def pagina_distrito(lang, p, c, d, hermanos):
     otros = ''.join(f'\n      <li><a href="{ruta(lang, p["slug"], c["slug"], h["slug"])}">{e(h["nombre"])}</a> <code>{h["codigo"]}</code></li>'
                     for h in hermanos if h is not d)
     contenido = f'''  <main>
-    <h1>{e(h1)}</h1>
+    <h1>{titular(h1)}</h1>
     <div class="cp-ficha">
       <span class="cp" id="cp">{d['codigo']}</span>
       {etiqueta(lang, d['gam'])}
@@ -261,7 +261,7 @@ def pagina_canton(lang, p, c):
     migas = [(T[lang]['inicio'], ruta(lang)), (p['nombre'], ruta(lang, p['slug'])), (c['nombre'], ruta(lang, *partes))]
     jsonld = {'@context': 'https://schema.org', '@graph': [migas_jsonld(migas)]}
     contenido = f'''  <main>
-    <h1>{e(titulo)}</h1>
+    <h1>{titular(titulo)}</h1>
     <p class="lede">{frase}</p>
     {tabla_distritos(lang, p, c)}
   </main>'''
@@ -291,11 +291,11 @@ def pagina_provincia(lang, p):
     bloques = ''.join(f'''
     <h2 id="{c['slug']}"><a href="{ruta(lang, p['slug'], c['slug'])}">{canton_txt} {e(c['nombre'])}</a></h2>
     {tabla_distritos(lang, p, c)}''' for c in p['cantones'])
-    indice = '&nbsp;· '.join(f'<a href="#{c["slug"]}">{e(c["nombre"])}</a>' for c in p['cantones'])
+    indice = ''.join(f'<a href="#{c["slug"]}">{e(c["nombre"])}</a>' for c in p['cantones'])
     contenido = f'''  <main>
-    <h1>{e(titulo)}</h1>
+    <h1>{titular(titulo)}</h1>
     <p class="lede">{frase}</p>
-    <p class="indice-cantones">{indice}</p>{bloques}
+    <p class="indice-cantones puntos">{indice}</p>{bloques}
   </main>'''
     escribir(Path(ruta(lang, *partes).lstrip('/')) / 'index.html',
              cabeza(lang, titulo, desc, partes, jsonld) + cuerpo(lang, partes, migas, contenido))
@@ -322,7 +322,7 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
     cols = ('Cantón', 'Provincia', 'Distritos', 'Códigos postales') if es else ('Canton', 'Province', 'Districts', 'Postal codes')
     migas = [(T[lang]['inicio'], ruta(lang)), (f'{n_cantones} {"cantones" if es else "cantons"}', ruta(lang, cant_slug))]
     contenido = f'''  <main>
-    <h1>{e(titulo)}</h1>
+    <h1>{titular(titulo)}</h1>
     <p class="lede">{'Costa Rica tiene' if es else 'Costa Rica has'} <b>7 {'provincias' if es else 'provinces'}, {n_cantones} {'cantones' if es else 'cantons'} {'y' if es else 'and'} {n_distritos} {'distritos' if es else 'districts'}</b>. {'Elegí un cantón para ver los códigos postales de sus distritos.' if es else 'Choose a canton to see the postal codes of its districts.'}</p>
     <div class="table-scroll">
     <table class="tabla-distritos tabla-cantones">
@@ -347,7 +347,7 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
     cols = ('Código postal', 'Distrito', 'Cantón', 'Provincia', 'Zona') if es else ('Postal code', 'District', 'Canton', 'Province', 'Zone')
     migas = [(T[lang]['inicio'], ruta(lang)), (f'{n_distritos} {"distritos" if es else "districts"}', ruta(lang, dist_slug))]
     contenido = f'''  <main>
-    <h1>{e(titulo)}</h1>
+    <h1>{titular(titulo)}</h1>
     <p class="lede">{'El código postal de Costa Rica tiene 5 dígitos: provincia (1), cantón (2) y distrito (2).' if es else 'Costa Rican postal codes have 5 digits: province (1), canton (2) and district (2).'}</p>
     <div class="table-scroll">
     <table class="tabla-distritos tabla-lista con-zona">
@@ -377,6 +377,11 @@ def cuerpo_lista(lang, i, migas, contenido):
     return c
 
 
+def titular(texto):
+    """Títulos: «Costa Rica» nunca se parte en dos líneas."""
+    return e(texto).replace('Costa Rica', 'Costa&nbsp;Rica')
+
+
 def bloque_inicio(lang, provincias):
     """Enlaces a todas las provincias y cantones para la página principal."""
     cant_slug, dist_slug = LISTAS[lang]
@@ -384,14 +389,14 @@ def bloque_inicio(lang, provincias):
         f'''
       <div class="provincia">
         <h3><a href="{ruta(lang, p['slug'])}">{e(p['nombre'])}</a> <code>{p['codigo']}</code></h3>
-        <p>{'&nbsp;· '.join(f'<a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a>' for c in p['cantones'])}</p>
+        <p class="puntos">{''.join(f'<a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a>' for c in p['cantones'])}</p>
       </div>''' for p in provincias)
-    ver = (f'<a href="{ruta(lang, cant_slug)}">Ver los 84 cantones</a> · <a href="{ruta(lang, dist_slug)}">Ver los 494 distritos</a>'
-           if lang == 'es' else f'<a href="{ruta(lang, cant_slug)}">See all 84 cantons</a> · <a href="{ruta(lang, dist_slug)}">See all 494 districts</a>')
+    ver = (f'<a href="{ruta(lang, cant_slug)}">Ver los 84 cantones</a><a href="{ruta(lang, dist_slug)}">Ver los 494 distritos</a>'
+           if lang == 'es' else f'<a href="{ruta(lang, cant_slug)}">See all 84 cantons</a><a href="{ruta(lang, dist_slug)}">See all 494 districts</a>')
     return f'''<!-- provincias:inicio -->
     <div class="provincias">{items}
     </div>
-    <p class="ver-listas">{ver}</p>
+    <p class="ver-listas puntos">{ver}</p>
     <!-- provincias:fin -->'''
 
 
