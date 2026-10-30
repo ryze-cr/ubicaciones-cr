@@ -145,17 +145,24 @@ def cuerpo(lang, partes, migas, contenido):
 '''
 
 
-def etiqueta(lang, gam):
-    return f'<span class="etiqueta-gam{" si" if gam else ""}">{T[lang]["gam_si"] if gam else T[lang]["gam_no"]}</span>'
+def etiqueta(lang, gam, extra=''):
+    clases = 'etiqueta-gam' + (' si' if gam else '') + (f' {extra}' if extra else '')
+    return f'<span class="{clases}">{T[lang]["gam_si"] if gam else T[lang]["gam_no"]}</span>'
+
+
+def celda_distrito(lang, url, d, detalle=''):
+    """Nombre del distrito con su detalle y su zona, que en celular reemplazan a las columnas que se ocultan."""
+    sub = f'<span class="sub">{e(detalle)}</span>' if detalle else ''
+    return f'<td><a href="{url}">{e(d["nombre"])}</a>{sub}{etiqueta(lang, d["gam"], "sub-gam")}</td>'
 
 
 def tabla_distritos(lang, p, c):
     filas = ''.join(
-        f'\n      <tr><td><code>{d["codigo"]}</code></td><td><a href="{ruta(lang, p["slug"], c["slug"], d["slug"])}">{e(d["nombre"])}</a></td>'
+        f'\n      <tr><td><code>{d["codigo"]}</code></td>{celda_distrito(lang, ruta(lang, p["slug"], c["slug"], d["slug"]), d)}'
         f'<td>{etiqueta(lang, d["gam"])}</td></tr>' for d in c['distritos'])
     cols = ''.join(f'<th>{x}</th>' for x in T[lang]['cols_distritos'])
     return f'''<div class="table-scroll">
-    <table class="tabla-distritos">
+    <table class="tabla-distritos con-zona">
       <thead><tr>{cols}</tr></thead>
       <tbody>{filas}
       </tbody>
@@ -298,8 +305,10 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
     es = lang == 'es'
     # Cantones
     filas = ''.join(
-        f'\n      <tr><td><a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a></td><td>{e(p["nombre"])}</td>'
-        f'<td>{len(c["distritos"])}</td><td><code>{c["distritos"][0]["codigo"]}</code> – <code>{c["distritos"][-1]["codigo"]}</code></td></tr>'
+        f'\n      <tr><td><a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a>'
+        f'<span class="sub">{e(p["nombre"])} · {len(c["distritos"])} {("distritos" if es else "districts") if len(c["distritos"]) != 1 else ("distrito" if es else "district")}</span></td>'
+        f'<td>{e(p["nombre"])}</td><td>{len(c["distritos"])}</td>'
+        f'<td class="rango"><code>{c["distritos"][0]["codigo"]}</code> – <code>{c["distritos"][-1]["codigo"]}</code></td></tr>'
         for p in provincias for c in p['cantones'])
     titulo = f'Los {n_cantones} cantones de Costa Rica y sus códigos postales' if es else f'The {n_cantones} cantons of Costa Rica and their postal codes'
     desc = (f'Lista de los {n_cantones} cantones de Costa Rica por provincia, con su cantidad de distritos y sus códigos postales. Datos oficiales del IGN, DTA 2026.'
@@ -310,7 +319,7 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
     <h1>{e(titulo)}</h1>
     <p class="lede">{'Costa Rica tiene' if es else 'Costa Rica has'} <b>7 {'provincias' if es else 'provinces'}, {n_cantones} {'cantones' if es else 'cantons'} {'y' if es else 'and'} {n_distritos} {'distritos' if es else 'districts'}</b>. {'Elegí un cantón para ver los códigos postales de sus distritos.' if es else 'Choose a canton to see the postal codes of its districts.'}</p>
     <div class="table-scroll">
-    <table class="tabla-distritos">
+    <table class="tabla-distritos tabla-cantones">
       <thead><tr>{''.join(f'<th>{x}</th>' for x in cols)}</tr></thead>
       <tbody>{filas}
       </tbody>
@@ -322,7 +331,8 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
              cabeza_lista(lang, titulo, desc, 0, jsonld) + cuerpo_lista(lang, 0, migas, contenido))
     # Distritos
     filas = ''.join(
-        f'\n      <tr><td><code>{d["codigo"]}</code></td><td><a href="{ruta(lang, p["slug"], c["slug"], d["slug"])}">{e(d["nombre"])}</a></td>'
+        f'\n      <tr><td><code>{d["codigo"]}</code></td>'
+        f'{celda_distrito(lang, ruta(lang, p["slug"], c["slug"], d["slug"]), d, c["nombre"] + " · " + p["nombre"])}'
         f'<td>{e(c["nombre"])}</td><td>{e(p["nombre"])}</td><td>{etiqueta(lang, d["gam"])}</td></tr>'
         for p in provincias for c in p['cantones'] for d in c['distritos'])
     titulo = f'Los {n_distritos} distritos de Costa Rica con su código postal' if es else f'All {n_distritos} districts of Costa Rica with their postal code'
@@ -334,7 +344,7 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
     <h1>{e(titulo)}</h1>
     <p class="lede">{'El código postal de Costa Rica tiene 5 dígitos: provincia (1), cantón (2) y distrito (2).' if es else 'Costa Rican postal codes have 5 digits: province (1), canton (2) and district (2).'}</p>
     <div class="table-scroll">
-    <table class="tabla-distritos">
+    <table class="tabla-distritos tabla-lista con-zona">
       <thead><tr>{''.join(f'<th>{x}</th>' for x in cols)}</tr></thead>
       <tbody>{filas}
       </tbody>

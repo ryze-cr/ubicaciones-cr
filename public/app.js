@@ -204,9 +204,12 @@ async function renderLista() {
     (!filtro || f.c.startsWith(filtro) || f.texto.includes(filtro)));
   $('lista-gam').replaceChildren(...filas.map((f) => {
     const etiqueta = crear('span', { class: 'etiqueta-gam' });
+    const subEtiqueta = crear('span', { class: 'etiqueta-gam sub-gam' });
     etiquetaGam(etiqueta, f.g === 1);
+    etiquetaGam(subEtiqueta, f.g === 1);
+    // En celular, cantón, provincia y zona se muestran debajo del distrito y sus columnas se ocultan
     return crear('tr', {}, crear('td', {}, crear('code', {}, f.c)),
-      crear('td', {}, crear('a', { href: PREFIJO + f.u }, f.d), crear('span', { class: 'sub' }, `${f.k} · ${f.p}`)),
+      crear('td', {}, crear('a', { href: PREFIJO + f.u }, f.d), crear('span', { class: 'sub' }, `${f.k} · ${f.p}`), subEtiqueta),
       crear('td', {}, f.k), crear('td', {}, f.p), crear('td', {}, etiqueta));
   }));
   $('lista-total').textContent = T.total(filas.length);
