@@ -158,7 +158,13 @@ table.ficha th { width: 40%; color: var(--muted); font-family: var(--mono); font
 .indice-cantones { font-size: .9rem; line-height: 1.8; color: var(--muted); }
 .tabla-distritos { font-size: .95rem; }
 /* La columna del código postal se ajusta a su contenido y deja el resto del ancho al nombre */
-.tabla-distritos.con-zona td:first-child, .tabla-gam td:first-child { width: 1%; white-space: nowrap; }
+.tabla-gam td:first-child { width: 1%; white-space: nowrap; }
+/* Las tablas de distritos usan anchos fijos de columna: así las tablas de cada cantón en una misma página
+   quedan alineadas entre sí, sin importar el largo de los nombres */
+.tabla-distritos.con-zona { table-layout: fixed; }
+.tabla-distritos.con-zona th:first-child { width: 8.5rem; }
+.tabla-distritos.con-zona th:last-child { width: 11.5rem; }
+.tabla-distritos.con-zona td:first-child { white-space: nowrap; }
 
 @media (max-width: 640px) {
   header { padding-top: 40px; }
@@ -188,6 +194,7 @@ table.ficha th { width: 40%; color: var(--muted); font-family: var(--mono); font
 /* Teléfonos: la zona pasa debajo del nombre del distrito para que ninguna tabla necesite scroll lateral */
 @media (max-width: 480px) {
   .con-zona th:last-child, .con-zona td:last-child, .tabla-gam th:nth-child(5), .tabla-gam td:nth-child(5) { display: none; }
+  .tabla-distritos.con-zona th:first-child { width: 5.25rem; }
   .con-zona .etiqueta-gam.sub-gam, .tabla-gam .etiqueta-gam.sub-gam { display: block; width: fit-content; margin-top: 6px; font-size: .7rem; padding: 2px 9px; }
   .stats { grid-template-columns: 1fr; gap: 8px; }
   .stat { display: flex; align-items: baseline; gap: 12px; padding: 10px 14px; }
