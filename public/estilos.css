@@ -132,6 +132,8 @@ header.inicio { padding-bottom: 8px; }
 .provincia h3 { margin: 0 0 6px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .provincia p { margin: 0; font-size: .9rem; line-height: 1.75; color: var(--muted); }
 .provincia p a { color: var(--fg); text-decoration: none; }
+/* Los nombres de cantones en listas no se parten al final de la línea */
+.provincia p a, .indice-cantones a { white-space: nowrap; }
 .provincia p a:hover { color: var(--accent); text-decoration: underline; }
 .ver-listas { margin-top: 14px; }
 
@@ -147,7 +149,7 @@ main h1 { margin-top: 18px; }
 .cp-ficha { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 4px 0 18px; }
 .cp-ficha .cp { font-size: 3rem; line-height: 1; }
 table.ficha { max-width: 520px; margin: 18px 0 8px; }
-table.ficha th { width: 40%; color: var(--muted); font-family: var(--mono); font-weight: 400; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
+table.ficha th { width: 1%; white-space: nowrap; padding-right: 24px; color: var(--muted); font-family: var(--mono); font-weight: 400; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
 .direccion { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .direccion code { font-size: .95rem; padding: 8px 12px; }
 .enlaces { columns: 2 220px; padding: 0; list-style: none; margin: 0; }
@@ -206,7 +208,7 @@ table.ficha th { width: 40%; color: var(--muted); font-family: var(--mono); font
 
 .idiomas { display: flex; justify-content: flex-end; gap: 16px; margin-bottom: 28px; font-family: var(--mono); font-size: .8rem;
            text-transform: uppercase; letter-spacing: .08em; }
-.idiomas a { color: var(--muted); text-decoration: none; }
+.idiomas a { color: var(--muted); text-decoration: none; padding: 6px 2px; }
 .idiomas a:hover { color: var(--heading); }
 .idiomas a[aria-current="page"] { color: var(--accent); }
 .idiomas a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
