@@ -119,9 +119,10 @@ def migas_jsonld(migas):
 def cuerpo(lang, partes, migas, contenido):
     """<body> común: selector de idioma, migas de pan, contenido y pie."""
     t = T[lang]
-    nav_migas = ' <span aria-hidden="true">›</span> '.join(
-        f'<a href="{url}">{e(nombre)}</a>' if i < len(migas) - 1 else f'<span aria-current="page">{e(nombre)}</span>'
-        for i, (nombre, url) in enumerate(migas))
+    # Cada separador va unido al elemento que le sigue, para que nunca quede colgando al final de una línea
+    piezas = [f'<a href="{url}">{e(nombre)}</a>' if i < len(migas) - 1 else f'<span aria-current="page">{e(nombre)}</span>'
+              for i, (nombre, url) in enumerate(migas)]
+    nav_migas = piezas[0] + ''.join(f'<span class="miga"><span aria-hidden="true">›</span> {p}</span>' for p in piezas[1:])
     actual_es = ' aria-current="page"' if lang == 'es' else ''
     actual_en = ' aria-current="page"' if lang == 'en' else ''
     return f'''<body>
@@ -229,7 +230,7 @@ def pagina_distrito(lang, p, c, d, hermanos):
     </table>
     <h2>{h2_dir}</h2>
     <p>{p_dir}</p>
-    <div class="direccion"><code>{e(direccion)}</code> <button type="button" class="copiar" data-copiar="{e(direccion)}">{T[lang]['copiar']}</button></div>
+    <div class="direccion"><code>{', '.join(f'<span class="nw">{e(x)}</span>' for x in direccion.split(', '))}</code> <button type="button" class="copiar" data-copiar="{e(direccion)}">{T[lang]['copiar']}</button></div>
     <h2>{e(h2_otros)}</h2>
     <ul class="enlaces">{otros}
     </ul>
@@ -290,7 +291,7 @@ def pagina_provincia(lang, p):
     bloques = ''.join(f'''
     <h2 id="{c['slug']}"><a href="{ruta(lang, p['slug'], c['slug'])}">{canton_txt} {e(c['nombre'])}</a></h2>
     {tabla_distritos(lang, p, c)}''' for c in p['cantones'])
-    indice = ' · '.join(f'<a href="#{c["slug"]}">{e(c["nombre"])}</a>' for c in p['cantones'])
+    indice = '&nbsp;· '.join(f'<a href="#{c["slug"]}">{e(c["nombre"])}</a>' for c in p['cantones'])
     contenido = f'''  <main>
     <h1>{e(titulo)}</h1>
     <p class="lede">{frase}</p>
@@ -298,6 +299,11 @@ def pagina_provincia(lang, p):
   </main>'''
     escribir(Path(ruta(lang, *partes).lstrip('/')) / 'index.html',
              cabeza(lang, titulo, desc, partes, jsonld) + cuerpo(lang, partes, migas, contenido))
+
+
+def rango(c):
+    primero, ultimo = c['distritos'][0]['codigo'], c['distritos'][-1]['codigo']
+    return f'<code>{primero}</code>' if primero == ultimo else f'<code>{primero}</code> – <code>{ultimo}</code>'
 
 
 def paginas_lista(lang, provincias, n_cantones, n_distritos):
@@ -308,13 +314,13 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
         f'\n      <tr><td><a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a>'
         f'<span class="sub">{e(p["nombre"])} · {len(c["distritos"])} {("distritos" if es else "districts") if len(c["distritos"]) != 1 else ("distrito" if es else "district")}</span></td>'
         f'<td>{e(p["nombre"])}</td><td>{len(c["distritos"])}</td>'
-        f'<td class="rango"><code>{c["distritos"][0]["codigo"]}</code> – <code>{c["distritos"][-1]["codigo"]}</code></td></tr>'
+        f'<td class="rango">{rango(c)}</td></tr>'
         for p in provincias for c in p['cantones'])
     titulo = f'Los {n_cantones} cantones de Costa Rica y sus códigos postales' if es else f'The {n_cantones} cantons of Costa Rica and their postal codes'
     desc = (f'Lista de los {n_cantones} cantones de Costa Rica por provincia, con su cantidad de distritos y sus códigos postales. Datos oficiales del IGN, DTA 2026.'
             if es else f'List of the {n_cantones} cantons of Costa Rica by province, with their number of districts and postal codes. Official IGN data, DTA 2026.')
     cols = ('Cantón', 'Provincia', 'Distritos', 'Códigos postales') if es else ('Canton', 'Province', 'Districts', 'Postal codes')
-    migas = [(T[lang]['inicio'], ruta(lang)), (titulo, ruta(lang, cant_slug))]
+    migas = [(T[lang]['inicio'], ruta(lang)), (f'{n_cantones} {"cantones" if es else "cantons"}', ruta(lang, cant_slug))]
     contenido = f'''  <main>
     <h1>{e(titulo)}</h1>
     <p class="lede">{'Costa Rica tiene' if es else 'Costa Rica has'} <b>7 {'provincias' if es else 'provinces'}, {n_cantones} {'cantones' if es else 'cantons'} {'y' if es else 'and'} {n_distritos} {'distritos' if es else 'districts'}</b>. {'Elegí un cantón para ver los códigos postales de sus distritos.' if es else 'Choose a canton to see the postal codes of its districts.'}</p>
@@ -339,7 +345,7 @@ def paginas_lista(lang, provincias, n_cantones, n_distritos):
     desc = (f'Lista completa de los {n_distritos} distritos de Costa Rica con su código postal, cantón, provincia y zona GAM. Datos oficiales del IGN, DTA 2026.'
             if es else f'Complete list of the {n_distritos} districts of Costa Rica with their postal code (ZIP code), canton, province and GAM zone. Official IGN data, DTA 2026.')
     cols = ('Código postal', 'Distrito', 'Cantón', 'Provincia', 'Zona') if es else ('Postal code', 'District', 'Canton', 'Province', 'Zone')
-    migas = [(T[lang]['inicio'], ruta(lang)), (titulo, ruta(lang, dist_slug))]
+    migas = [(T[lang]['inicio'], ruta(lang)), (f'{n_distritos} {"distritos" if es else "districts"}', ruta(lang, dist_slug))]
     contenido = f'''  <main>
     <h1>{e(titulo)}</h1>
     <p class="lede">{'El código postal de Costa Rica tiene 5 dígitos: provincia (1), cantón (2) y distrito (2).' if es else 'Costa Rican postal codes have 5 digits: province (1), canton (2) and district (2).'}</p>
@@ -378,7 +384,7 @@ def bloque_inicio(lang, provincias):
         f'''
       <div class="provincia">
         <h3><a href="{ruta(lang, p['slug'])}">{e(p['nombre'])}</a> <code>{p['codigo']}</code></h3>
-        <p>{' · '.join(f'<a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a>' for c in p['cantones'])}</p>
+        <p>{'&nbsp;· '.join(f'<a href="{ruta(lang, p["slug"], c["slug"])}">{e(c["nombre"])}</a>' for c in p['cantones'])}</p>
       </div>''' for p in provincias)
     ver = (f'<a href="{ruta(lang, cant_slug)}">Ver los 84 cantones</a> · <a href="{ruta(lang, dist_slug)}">Ver los 494 distritos</a>'
            if lang == 'es' else f'<a href="{ruta(lang, cant_slug)}">See all 84 cantons</a> · <a href="{ruta(lang, dist_slug)}">See all 494 districts</a>')
