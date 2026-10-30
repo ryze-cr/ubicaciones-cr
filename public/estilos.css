@@ -11,6 +11,8 @@
   --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 * { box-sizing: border-box; }
+/* hidden siempre oculta, aunque el componente defina su propio display */
+[hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.65 var(--sans); }
 .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
 header { padding: 64px 0 32px; }
@@ -88,6 +90,9 @@ footer { margin: 72px 0 32px; padding-top: 20px; border-top: 1px solid var(--lin
 .filtro-gam label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .etiqueta-gam { align-self: center; font-family: var(--mono); font-size: .75rem; font-weight: 500; text-transform: uppercase;
                 letter-spacing: .06em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; }
+.etiqueta-gam { white-space: nowrap; display: inline-block; }
+.etiqueta-gam.sub-gam, .tabla-distritos .sub { display: none; }
+p code, li code, summary code, .faq code { overflow-wrap: anywhere; }
 .etiqueta-gam.si { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
 .copiar { font: inherit; font-size: .85rem; font-weight: 500; color: var(--heading); background: var(--bg); border: 1px solid var(--line);
           border-radius: 8px; padding: 6px 12px; cursor: pointer; align-self: center; }
@@ -152,6 +157,8 @@ table.ficha th { width: 40%; color: var(--muted); font-family: var(--mono); font
 .buscar-otro { margin-top: 32px; }
 .indice-cantones { font-size: .9rem; line-height: 1.8; color: var(--muted); }
 .tabla-distritos { font-size: .95rem; }
+/* La columna del código postal se ajusta a su contenido y deja el resto del ancho al nombre */
+.tabla-distritos.con-zona td:first-child, .tabla-gam td:first-child { width: 1%; white-space: nowrap; }
 
 @media (max-width: 640px) {
   header { padding-top: 40px; }
@@ -166,6 +173,28 @@ table.ficha th { width: 40%; color: var(--muted); font-family: var(--mono); font
   .tabla-gam .sub { display: block; font-size: .8rem; color: var(--muted); }
   .tabla-gam th, .tabla-gam td { padding: 8px 9px; }
   .tabla-gam .etiqueta-gam { font-size: .7rem; padding: 3px 8px; }
+  /* Listas de cantones y distritos: provincia, cantón y cantidad pasan debajo del nombre */
+  .tabla-lista th:nth-child(3), .tabla-lista td:nth-child(3), .tabla-lista th:nth-child(4), .tabla-lista td:nth-child(4),
+  .tabla-cantones th:nth-child(2), .tabla-cantones td:nth-child(2), .tabla-cantones th:nth-child(3), .tabla-cantones td:nth-child(3) { display: none; }
+  .tabla-distritos .sub { display: block; font-size: .8rem; color: var(--muted); }
+  .tabla-distritos th, .tabla-distritos td { padding: 8px 9px; }
+  /* Endpoints de la API: cada fila pasa a ser un bloque, con la ruta arriba y la descripción debajo */
+  .api table thead { display: none; }
+  .api table tr { display: block; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .api table td { display: block; padding: 2px 0; border: 0; }
+  .api td code { white-space: normal; overflow-wrap: anywhere; font-size: .8em; }
+}
+
+/* Teléfonos: la zona pasa debajo del nombre del distrito para que ninguna tabla necesite scroll lateral */
+@media (max-width: 480px) {
+  .con-zona th:last-child, .con-zona td:last-child, .tabla-gam th:nth-child(5), .tabla-gam td:nth-child(5) { display: none; }
+  .con-zona .etiqueta-gam.sub-gam, .tabla-gam .etiqueta-gam.sub-gam { display: block; width: fit-content; margin-top: 6px; font-size: .7rem; padding: 2px 9px; }
+  .stats { grid-template-columns: 1fr; gap: 8px; }
+  .stat { display: flex; align-items: baseline; gap: 12px; padding: 10px 14px; }
+  .stat b { display: inline; }
+  /* Resultados del buscador: código, zona y botón bajan de línea si no caben */
+  .resultados li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .resultados li > a { flex-basis: 100%; }
 }
 
 .idiomas { display: flex; justify-content: flex-end; gap: 16px; margin-bottom: 28px; font-family: var(--mono); font-size: .8rem;
