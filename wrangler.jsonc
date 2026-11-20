@@ -9,7 +9,7 @@
   },
   // Dominio oficial. La zona postalcr.dev está en esta misma cuenta de Cloudflare.
   "routes": [{ "pattern": "postalcr.dev", "custom_domain": true }],
-  // La URL vieja (ubicaciones-cr.ryze-cr.workers.dev) sigue respondiendo para no romper integraciones existentes.
+  // La URL anterior del Worker sigue respondiendo para no romper integraciones existentes.
   "workers_dev": true,
   // Necesario para que `wrangler preview` cree una URL de prueba en cada PR.
   "previews": {}
