@@ -2,7 +2,7 @@
 
 > API JSON pública y gratuita con las 7 provincias, 84 cantones y 494 distritos de Costa Rica, y sus códigos postales, según la División Territorial Administrativa (DTA 2026) del Instituto Geográfico Nacional (IGN). Cada distrito indica si pertenece a la Gran Área Metropolitana (GAM). Solo lectura, sin autenticación, con CORS abierto. Todas las rutas son `GET` a archivos estáticos.
 
-Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
+Base URL: `https://postalcr.dev`
 
 ## Reglas importantes
 
@@ -17,16 +17,16 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 
 ## Endpoints
 
-- [/provincias.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincias.json): objeto `{ "número": "nombre" }` con las 7 provincias. Ejemplo: `{"1":"San José","2":"Alajuela",...,"7":"Limón"}`
-- [/provincia/{p}/cantones.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/cantones.json): cantones de la provincia `p` (1–7), como `{ "número": "nombre" }`. Ejemplo para `p=1`: `{"1":"San José","2":"Escazú","3":"Desamparados",...}`
-- [/provincia/{p}/canton/{c}/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/canton/3/distritos.json): distritos del cantón `c` de la provincia `p`, como `{ "número": "nombre" }`. Ejemplo para `p=1, c=3`: `{"1":"Desamparados","2":"San Miguel",...,"5":"San Antonio",...}`
-- [/codigo-postal/{PCCDD}.json](https://ubicaciones-cr.ryze-cr.workers.dev/codigo-postal/10305.json): un distrito a partir de su código postal. Respuesta:
+- [/provincias.json](https://postalcr.dev/provincias.json): objeto `{ "número": "nombre" }` con las 7 provincias. Ejemplo: `{"1":"San José","2":"Alajuela",...,"7":"Limón"}`
+- [/provincia/{p}/cantones.json](https://postalcr.dev/provincia/1/cantones.json): cantones de la provincia `p` (1–7), como `{ "número": "nombre" }`. Ejemplo para `p=1`: `{"1":"San José","2":"Escazú","3":"Desamparados",...}`
+- [/provincia/{p}/canton/{c}/distritos.json](https://postalcr.dev/provincia/1/canton/3/distritos.json): distritos del cantón `c` de la provincia `p`, como `{ "número": "nombre" }`. Ejemplo para `p=1, c=3`: `{"1":"Desamparados","2":"San Miguel",...,"5":"San Antonio",...}`
+- [/codigo-postal/{PCCDD}.json](https://postalcr.dev/codigo-postal/10305.json): un distrito a partir de su código postal. Respuesta:
   `{"codigo_postal":"10305","distrito":"San Antonio","canton":"Desamparados","provincia":"San José","codigos":{"provincia":1,"canton":3,"distrito":5},"area_km2":2.1,"gam":true}`
-- [/distritos.json](https://ubicaciones-cr.ryze-cr.workers.dev/distritos.json): arreglo con los 494 distritos, cada uno con la misma forma que `/codigo-postal/{PCCDD}.json`. Es la mejor opción para buscar por nombre.
-- [/gam.json](https://ubicaciones-cr.ryze-cr.workers.dev/gam.json): las dos listas de códigos postales, `gam` y `no_gam`, con la definición y el criterio usados.
-- [/todo.json](https://ubicaciones-cr.ryze-cr.workers.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`; cada distrito trae además `gam`.
-- [/meta.json](https://ubicaciones-cr.ryze-cr.workers.dev/meta.json): versión de la API (semver), fuente, edición y totales.
-- [/openapi.json](https://ubicaciones-cr.ryze-cr.workers.dev/openapi.json): especificación OpenAPI 3.1 de todas las rutas.
+- [/distritos.json](https://postalcr.dev/distritos.json): arreglo con los 494 distritos, cada uno con la misma forma que `/codigo-postal/{PCCDD}.json`. Es la mejor opción para buscar por nombre.
+- [/gam.json](https://postalcr.dev/gam.json): las dos listas de códigos postales, `gam` y `no_gam`, con la definición y el criterio usados.
+- [/todo.json](https://postalcr.dev/todo.json): árbol completo `fuente` + `provincias[] → cantones[] → distritos[]`, cada nivel con `codigo` (string oficial: `"1"`, `"101"`, `"10101"`), `nombre` y `area_km2`; cada distrito trae además `gam`.
+- [/meta.json](https://postalcr.dev/meta.json): versión de la API (semver), fuente, edición y totales.
+- [/openapi.json](https://postalcr.dev/openapi.json): especificación OpenAPI 3.1 de todas las rutas.
 
 ## Tareas comunes
 
@@ -45,4 +45,4 @@ Base URL: `https://ubicaciones-cr.ryze-cr.workers.dev`
 ## Opcional
 
 - [Repositorio en GitHub](https://github.com/ryze-cr/ubicaciones-cr): código fuente y reportes de errores en los datos.
-- [Buscador de códigos postales para personas](https://ubicaciones-cr.ryze-cr.workers.dev/): hay una página HTML por provincia, cantón y distrito, en español (`/{provincia}/{canton}/{distrito}/`, por ejemplo `/san-jose/desamparados/san-antonio/`) y en inglés (`/en/...`). Para consultas automáticas, usá los endpoints JSON.
+- [Buscador de códigos postales para personas](https://postalcr.dev/): hay una página HTML por provincia, cantón y distrito, en español (`/{provincia}/{canton}/{distrito}/`, por ejemplo `/san-jose/desamparados/san-antonio/`) y en inglés (`/en/...`). Para consultas automáticas, usá los endpoints JSON.

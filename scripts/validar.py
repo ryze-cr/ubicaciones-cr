@@ -110,6 +110,12 @@ urls_sitemap = (PUBLIC / 'sitemap.xml').read_text(encoding='utf-8').count('<loc>
 esperadas = 2 * (1 + 2 + len(dta['provincias']) + len(cantones) + len(distritos))
 revisar(urls_sitemap == esperadas, f'sitemap.xml tiene {urls_sitemap} URLs y deberían ser {esperadas}')
 revisar('<!-- provincias:inicio -->' in indice and '/san-jose/' in indice, 'index.html no tiene el bloque de provincias generado')
+# Todas las URLs absolutas deben usar el dominio oficial (paginas.SITIO); la URL de workers.dev sigue activa
+# solo para no romper integraciones viejas
+revisar(f'<link rel="canonical" href="{paginas.SITIO}/">' in indice, f'index.html no tiene el canonical de {paginas.SITIO}')
+for archivo in [RAIZ / 'README.md', *PUBLIC.rglob('*.html'), *PUBLIC.glob('*.txt'), *PUBLIC.glob('*.xml'), PUBLIC / 'openapi.json']:
+    revisar('workers.dev' not in archivo.read_text(encoding='utf-8'),
+            f'{archivo.relative_to(RAIZ)} todavía menciona workers.dev; usar {paginas.SITIO}')
 revisar((PUBLIC / 'og.png').exists(), 'falta public/og.png (correr scripts/generar_imagen_og.py)')
 revisar((PUBLIC / '404.html').exists(), 'falta public/404.html (sin él, Cloudflare Pages responde 200 a rutas inexistentes)')
 
