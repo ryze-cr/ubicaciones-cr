@@ -4,11 +4,11 @@ Un proyecto de **Flashout Labs**.
 
 API JSON gratuita con las provincias, cantones, distritos y códigos postales de Costa Rica, según la **División Territorial Administrativa 2026** del Instituto Geográfico Nacional (IGN).
 
-**URL:** https://ubicaciones-cr.ryze-cr.workers.dev
+**URL:** https://postalcr.dev
 
-**English:** https://ubicaciones-cr.ryze-cr.workers.dev/en/
+**English:** https://postalcr.dev/en/
 
-Además de la API, el sitio es un buscador de códigos postales con una página por provincia, cantón y distrito (por ejemplo, [San Antonio de Desamparados](https://ubicaciones-cr.ryze-cr.workers.dev/san-jose/desamparados/san-antonio/)).
+Además de la API, el sitio es un buscador de códigos postales con una página por provincia, cantón y distrito (por ejemplo, [San Antonio de Desamparados](https://postalcr.dev/san-jose/desamparados/san-antonio/)).
 
 - **7 provincias, 84 cantones y 494 distritos**
 - Sin API key, sin registro y con CORS abierto
@@ -33,10 +33,10 @@ Además de la API, el sitio es un buscador de códigos postales con una página 
 Los números de cantón y distrito van sin ceros a la izquierda: `/provincia/1/canton/3/distritos.json`.
 
 ```js
-const cantones = await fetch('https://ubicaciones-cr.ryze-cr.workers.dev/provincia/1/cantones.json').then(r => r.json());
+const cantones = await fetch('https://postalcr.dev/provincia/1/cantones.json').then(r => r.json());
 // { "1": "San José", "2": "Escazú", "3": "Desamparados", ... }
 
-const distrito = await fetch('https://ubicaciones-cr.ryze-cr.workers.dev/codigo-postal/10305.json').then(r => r.json());
+const distrito = await fetch('https://postalcr.dev/codigo-postal/10305.json').then(r => r.json());
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados", "provincia": "San José", "gam": true, ... }
 ```
 

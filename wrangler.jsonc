@@ -7,6 +7,10 @@
     // Rutas inexistentes responden public/404.html con estado 404.
     "not_found_handling": "404-page"
   },
+  // Dominio oficial. La zona postalcr.dev está en esta misma cuenta de Cloudflare.
+  "routes": [{ "pattern": "postalcr.dev", "custom_domain": true }],
+  // La URL vieja (ubicaciones-cr.ryze-cr.workers.dev) sigue respondiendo para no romper integraciones existentes.
+  "workers_dev": true,
   // Necesario para que `wrangler preview` cree una URL de prueba en cada PR.
   "previews": {}
 }

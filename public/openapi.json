@@ -16,11 +16,11 @@
   },
   "externalDocs": {
     "description": "Guía para agentes de IA (llms.txt)",
-    "url": "https://ubicaciones-cr.ryze-cr.workers.dev/llms.txt"
+    "url": "https://postalcr.dev/llms.txt"
   },
   "servers": [
     {
-      "url": "https://ubicaciones-cr.ryze-cr.workers.dev"
+      "url": "https://postalcr.dev"
     }
   ],
   "paths": {
