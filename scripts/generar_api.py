@@ -37,7 +37,7 @@ def main():
         elif destino.exists():
             destino.unlink()
 
-    # Endpoints compatibles con ubicaciones.paginasweb.cr: { "<número>": "<nombre>" }
+    # Endpoints por provincia y cantón: { "<número>": "<nombre>" }
     escribir('provincias.json', {p['codigo']: p['nombre'] for p in dta['provincias']})
     planos = []
     for p in dta['provincias']:
