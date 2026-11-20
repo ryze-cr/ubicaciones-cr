@@ -40,8 +40,6 @@ const distrito = await fetch('https://postalcr.dev/codigo-postal/10305.json').th
 // { "codigo_postal": "10305", "distrito": "San Antonio", "canton": "Desamparados", "provincia": "San José", "gam": true, ... }
 ```
 
-Las tres primeras rutas tienen la misma forma que [ubicaciones.paginasweb.cr](https://ubicaciones.paginasweb.cr), así que para migrar solo cambiás la URL base.
-
 ## ¿Encontraste un error?
 
 Abrí un [issue](https://github.com/ryze-cr/ubicaciones-cr/issues/new/choose) con la fuente oficial. Más detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -50,5 +48,4 @@ Abrí un [issue](https://github.com/ryze-cr/ubicaciones-cr/issues/new/choose) co
 
 - Un proyecto de **Flashout Labs**, hecho gracias a [Carl De Pass](https://github.com/ryze-cr).
 - Datos: [Instituto Geográfico Nacional](https://www.snitcr.go.cr), Registro Nacional de Costa Rica.
-- Inspirado en [lfbvyo/ubicaciones](https://github.com/lfbvyo/ubicaciones), de Luis Felipe Barnett Vásquez.
 - Código bajo licencia [MIT](LICENSE).
